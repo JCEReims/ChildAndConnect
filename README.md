@@ -17,19 +17,23 @@ You must install :
 ## How to install
 
 - Clone the repository with command line
+
 git clone https://github.com/JCEReims/ChildAndConnect.git
 
 - Run php composer
+
 composer install
 
 - In mysql, create the database ccapplicqesoft and create an associate database user.
 - Use the script sql/database.sql to create the database structure.
 - Open files app/config/config_dev.yml and app/config/config_dev.yml and set right database parameters.
 - Create the admin user
+
 php app/console fos:user:create adminuser --super-admin
 php app/console fos:user:activate adminuser
 
 - Run the application
+
 php app/console server:run
 
 - Connect on http://127.0.0.1:8000 with your favorite browser
