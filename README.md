@@ -2,7 +2,7 @@
 
 Child and Connect is a trademark created by JCE Reims (http://www.jcereims.fr).
 
-The technical creator is imajim.
+The technical creator is imajim (https://github.com/imajim).
 
 The solution is based on symfony php framework (https://symfony.com/).
 
