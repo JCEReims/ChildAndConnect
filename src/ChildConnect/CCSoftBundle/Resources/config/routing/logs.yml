@@ -1,0 +1,10 @@
+logs:
+    pattern:  /
+    defaults: { _controller: "ChildConnectCCSoftBundle:Logs:index" }
+
+logs_show:
+    pattern:  /{id}/show
+    defaults: { _controller: "ChildConnectCCSoftBundle:Logs:show" }
+
+
+

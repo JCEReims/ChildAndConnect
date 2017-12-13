@@ -1,0 +1,149 @@
+{% extends "ChildConnectCCSoftBundle::layout.html.twig" %}
+{% block header %} 
+<script type="text/javascript" src="{{ asset(js_url~'hightcharts/js/highcharts.js')}}"></script> 
+{% endblock %}
+{% block content %}
+<ul class="record_actions">
+<li class="right"><a href="{{ path('enfant_printFiche', {enfant : enfant.id,'quiz' : enfantQuizs[0].quiz.id }) }}" class="btn_print_fiche_enfant" target="_blank" title="Imprimer la fiche de l'enfant avec les réponses"><i class="genericon genericon-print" alt="f469"></i></a></li>
+</ul>
+<div class="block_enfant_profil content_element_enfant"> {% include "ChildConnectCCSoftBundle:Enfant:infos_enfant.html.twig" %}
+  <div class="profil_enfant left"> {% if title_H1 is defined %}
+    <h1 class="title_block">{{ title_H1 }}</h1>
+    <div class="clear"></div>
+    {% endif %}
+    <div class="infos_enfant">
+      <p><span>Prénom : </span><span class="strong">{% if enfant.prenom %} {{ enfant.prenom }}{% else %}Inconnu{% endif %}</span></p>
+      <p><span>Nom : </span><span class="strong">{% if enfant.nom %} {{ enfant.nom }}{% else %}Inconnu{% endif %}</span></p>
+      <p><span>Surnom : </span><span class="strong">{{ enfant.surnom }}</span></p>
+      <p><span>Sexe : </span><span class="strong">{{ enfant.sexe }}</span></p>
+      <p><span>Age :</span><span class="strong">{{ "now"|date("Y") - enfant.dateNaissance|date('Y') }} ans</span> </p>
+      <p> <span>Date de Naissance :</span><span class="strong"> {% if enfant.dateNaissance %}{{ enfant.dateNaissance|date('d-m-Y') }}{% endif %}</span> </p>
+      <p><span>Signe Distinctif : </span>{{ enfant.signeDistinctif }}</p>
+      <p><span>Suivi Par : </span>{{ enfant.suiviPar }}</p>
+    </div>
+    <!-- {# <div class="liens_theme_questionnaire">
+         <ul>
+         	{% for enfantQuiz in enfantQuizs %}
+                {% for themeQuestion in themesQuestions %}
+                    <li><a href="{{ path('quiz_show_enfant', { 'quiz': enfantQuiz.quiz.id, 'enfant': enfant.id}) }}#{{ themeQuestion.slug }}" title="{{ enfantQuiz.quiz.name }}">{{ themeQuestion.name }}</a></li>
+                {% endfor %}
+         	{% endfor %}
+         </ul>
+         </div>
+         #} -->
+    <div class="jauge">
+      <p>Jauge d'intrégration</p>
+      <div style="height:60px" id="jauge_insertion"></div>
+    </div>
+    
+  </div>
+  <div class="clear"></div>
+</div>
+<div class="clear"></div>
+<ul class="record_actions">
+
+  <li>{% if is_granted('ROLE_ADMIN_ASSOC') %} <a href="{{ path('enfant_edit', { 'id': enfant.id,'quiz' : enfantQuizs[0].quiz.id }) }}" class="btn_edit" >Modifier l'identité</a> {% endif %} </li>
+  {% if is_granted('ROLE_SUPER_ADMIN') %}
+  <li> {{ form(delete_form) }} </li>
+  {% endif %}
+</ul>
+<div class="clear"></div>
+<div id="confirmBox_delete">
+  <p>Voulez-vous supprimer cet enfant ?</p>
+</div>
+<script language="javascript">
+	
+    $(document).ready(function() {
+		$('.btn_print_fiche_enfant').tooltip();
+		
+        var chart = new Highcharts.Chart({
+            chart: {
+                renderTo: 'jauge_insertion',
+                defaultSeriesType: 'bar',
+                plotBorderWidth: 2,
+                plotBackgroundColor: '#ebebeb',
+                plotBorderColor: '#D8D8D8',
+                plotShadow: false,
+                spacingBottom: 0,
+                width: 400,
+				height:52
+            },
+			tooltip: {
+				useHTML: true,
+				style: {
+						'padding': 3
+					},
+                formatter: function() {
+                    return '<b>'+ this.y.toFixed(0) +' % </b>';
+                }
+            },
+            credits: {
+                enabled: false
+            },
+            xAxis: {
+                labels: {
+                    enabled: false
+                },
+                tickLength: 0
+            },
+            title: {
+                text: null
+            },
+            legend: {
+                enabled: false
+            },
+            yAxis: {
+                title: {
+                    text: null
+                },
+                labels: {
+                    y: 10,
+					formatter:function() {
+						
+						return Highcharts.numberFormat(this.value,0,',') + '%';
+					}
+				   //enabled: false
+				  
+                },
+                min: 0,
+                max:  100 ,
+				 tickInterval: 10,
+				gridLineWidth: 0
+            },
+            plotOptions: {},
+            series: [{
+                borderRadius: 0,
+                borderWidth: 1,
+                color: {
+                    linearGradient: {
+                        x1: 0,
+                        y1: 0,
+                        x2: 1,
+                        y2: 0
+                    },
+                    stops: [ 
+								 [0, '#ed8223'],
+								 [0.5, '#b2703f'],
+								 [1, '#ed8223']]
+                },
+                pointWidth:28,
+                data: [{% if quiz_gauge_insertion %}{% if quiz_gauge_insertion[1].responsesValueDefault != 0 %}{{(quiz_gauge_insertion[1].responseEnfantValue * 100)/ quiz_gauge_insertion[1].responsesValueDefault}}{% endif %}{% endif %}]
+				}]
+		},	function(chart){
+				if(chart)
+				{
+				  chart.tooltip.refresh(chart.series[0].points[0]);
+				}
+			
+      	  });
+   
+
+});
+	</script> 
+{% endblock %}
+{% block menuTop %}
+{{ render(controller('ChildConnectCCSoftBundle:Widget:menuTop', {'options' : {'actif' : id_body}} ) ) }}
+{% endblock menuTop %}
+{% block menuEnfant %}
+{{ render(controller('ChildConnectCCSoftBundle:Widget:menuEnfant', { 'entities' : {'enfant' : enfant, 'quiz' : enfantQuizs[0].quiz }, 'options' : {'actif' : id_body}} ) ) }}
+{% endblock menuEnfant %} 

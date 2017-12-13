@@ -1,0 +1,158 @@
+{% extends "ChildConnectCCSoftBundle::print-fiche-enfant.html.twig" %}
+
+{% block content %}
+<script type="text/javascript" src="{{ asset(js_url~'hightcharts/js/highcharts.js')}}"></script> 
+<div class="block_show_quiz_enfant content_left content_element_enfant"> {% include "ChildConnectCCSoftBundle:Enfant:infos_enfant.html.twig" %}
+  <div class="infos_enfant left">
+    <p><span>Prénom : </span><span class="strong">{% if enfant.prenom %} {{ enfant.prenom }}{% else %}Inconnu{% endif %}</span></p>
+    <p><span>Nom : </span><span class="strong">{% if enfant.nom %} {{ enfant.nom }}{% else %}Inconnu{% endif %}</span></p>
+    <p><span>Surnom : </span><span class="strong">{{ enfant.surnom }}</span></p>
+    <p><span>Age :</span><span class="strong">{{ "now"|date("Y") - enfant.dateNaissance|date('Y') }} ans</span> </p>
+    <p> <span>Date de Naissance :</span><span class="strong"> {% if enfant.dateNaissance %}{{ enfant.dateNaissance|date('d-m-Y') }}{% endif %}</span> </p>
+    <p><span>Signe Distinctif : </span>{{ enfant.signeDistinctif }}</p>
+    <p><span>Suivi Par : </span>{{ enfant.suiviPar }}</p>
+  </div>
+  <div class="questions_responses_enfant ">
+    <div class="response_enfant "> {% set  cpt = 1 %}
+      {% set  j = 1 %}
+      {% set  prev_themeQuestion = "" %}
+      
+      {% for key_q,questionResponse in questionsResponses %}
+      
+      {% set  themeQuestion = questionResponse.theme %}
+      {% if (themeQuestion != prev_themeQuestion and prev_themeQuestion != "") %}{% set cpt = cpt + 1 %} </div>
+    {% endif %}
+    {% if (themeQuestion != prev_themeQuestion) %}
+    <div id="tab_{{ themeQuestion }}" class="block_question_theme" data-slide="{{ key_q }}" data-nicename="{{ questionResponse.theme_nicename}}">
+      <h1 class="title_block">{{ questionResponse.theme_nicename }}</h1>
+      {% endif %}
+      <div  class=" block_question">
+        <h3>{{questionResponse.name }}</h3>
+        <ul class="answers">
+          {% if(questionResponse.responses is defined and (questionResponse.responseType == 'textarea' or questionResponse.responseType == 'text')) %}
+          <li>{{ questionResponse.responses }} </li>
+          {% elseif(questionResponse.responseType == 'radio') %}
+          {% for key_rp,rp in questionResponse.responseProposal %}
+          {% if questionResponse.responses is defined  %}
+          <li> 
+            <!--<span class="genericon {% if(questionResponse.responses is defined and  (key_rp in questionResponse.responses|keys)) %}  genericon-aside {% endif %}"></span>--> 
+            <span class="{% if(questionResponse.responses is defined and  (key_rp in questionResponse.responses|keys)) %} responded {% endif %}">{{ rp }} </span> </li>
+          {% endif %}
+          {% endfor %}
+          {% endif %}
+        </ul>
+      </div>
+      {% if questionResponse.commentaire is defined  %}
+      <div class="commentaire_block">
+        <div class="inner_commentaire"><span class="add_comment"><i class="genericon genericon-chat"></i>Commentaire</span>
+          <div class="clear"></div>
+          {{ questionResponse.commentaire }}</div>
+      </div>
+      {% endif %}
+      {% set  prev_themeQuestion = themeQuestion %}
+      {% if (j == questionsResponses|length ) %}</div>
+    {% endif %}
+    {% set  j = j+1 %}
+    
+    {% endfor %}
+    <div class="clear"></div>
+  </div>
+  <div class="jauge">
+      <p>Jauge d'intrégration</p>
+      <div style="height:60px" id="jauge_insertion"></div>
+    </div>
+  <div class="clear"></div>
+  
+</div>
+<div class="clear"></div>
+</div>
+<script language="javascript">
+	
+    $(document).ready(function() {
+		
+		
+        var chart = new Highcharts.Chart({
+            chart: {
+                renderTo: 'jauge_insertion',
+                defaultSeriesType: 'bar',
+                plotBorderWidth: 2,
+                plotBackgroundColor: '#ebebeb',
+                plotBorderColor: '#D8D8D8',
+                plotShadow: false,
+                spacingBottom: 0,
+                width: 400,
+				height:52
+            },
+			tooltip: {
+				useHTML: true,
+				style: {
+						'padding': 3
+					},
+                formatter: function() {
+                    return '<b>'+ this.y.toFixed(0) +' % </b>';
+                }
+            },
+            credits: {
+                enabled: false
+            },
+            xAxis: {
+                labels: {
+                    enabled: false
+                },
+                tickLength: 0
+            },
+            title: {
+                text: null
+            },
+            legend: {
+                enabled: false
+            },
+            yAxis: {
+                title: {
+                    text: null
+                },
+                labels: {
+                    y: 10,
+					formatter:function() {
+						
+						return Highcharts.numberFormat(this.value,0,',') + '%';
+					}
+				   //enabled: false
+				  
+                },
+                min: 0,
+                max:  100 ,
+				 tickInterval: 10,
+				gridLineWidth: 0
+            },
+            plotOptions: {},
+            series: [{
+                borderRadius: 0,
+                borderWidth: 1,
+                color: {
+                    linearGradient: {
+                        x1: 0,
+                        y1: 0,
+                        x2: 1,
+                        y2: 0
+                    },
+                    stops: [ 
+								 [0, '#ed8223'],
+								 [0.5, '#b2703f'],
+								 [1, '#ed8223']]
+                },
+                pointWidth:28,
+                data: [{% if quiz_gauge_insertion %}{% if quiz_gauge_insertion[1].responsesValueDefault != 0 %}{{(quiz_gauge_insertion[1].responseEnfantValue * 100)/ quiz_gauge_insertion[1].responsesValueDefault}}{% endif %}{% endif %}]
+				}]
+		},	function(chart){
+				if(chart)
+				{
+				  chart.tooltip.refresh(chart.series[0].points[0]);
+				}
+			
+      	  });
+   
+
+});
+	</script> 
+{% endblock %}

@@ -1,0 +1,17 @@
+<ul class="list_enfants_exist">
+{% for enfant in enfants %}
+<li>
+	<p class="identite">prenom :<strong> {{ enfant.prenom }}</strong><br /> Nom :<strong> {{ enfant.nom }}</strong> <br /> Surnom :<strong> {{ enfant.surnom }}</strong></p>
+	<p class="coordonnee_assoc">
+    	
+        	<strong>{{ enfant.associations[0].nom }}</strong><br />
+            {{ enfant.associations[0].adresse|nl2br }}<br />
+            {{ enfant.associations[0].ville }}<br />
+            {{ enfant.associations[0].telephone }}<br />
+            {{ enfant.associations[0].email }}
+       
+	</p>
+</li>
+{% endfor %}
+</ul>
+<div class="clear"></div>

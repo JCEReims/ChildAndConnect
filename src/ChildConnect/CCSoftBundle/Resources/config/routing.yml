@@ -1,0 +1,54 @@
+home:
+    pattern:  /
+    defaults: { _controller: "ChildConnectCCSoftBundle:Default:index" }
+
+ChildConnectCCSoftBundle_quiz:
+    resource: "@ChildConnectCCSoftBundle/Resources/config/routing/quiz.yml"
+    prefix:   /quiz
+
+ChildConnectCCSoftBundle_question:
+    resource: "@ChildConnectCCSoftBundle/Resources/config/routing/question.yml"
+    prefix:   /question
+
+ChildConnectCCSoftBundle_enfant:
+    resource: "@ChildConnectCCSoftBundle/Resources/config/routing/enfant.yml"
+    prefix:   /enfant
+
+ChildConnectCCSoftBundle_association:
+    resource: "@ChildConnectCCSoftBundle/Resources/config/routing/association.yml"
+    prefix:   /association
+
+ChildConnectCCSoftBundle_event:
+    resource: "@ChildConnectCCSoftBundle/Resources/config/routing/event.yml"
+    prefix:   /event
+ChildConnectCCSoftBundle_lieu:
+    resource: "@ChildConnectCCSoftBundle/Resources/config/routing/lieu.yml"
+    prefix:   /lieu
+ChildConnectCCSoftBundle_user:
+    resource: "@ChildConnectCCSoftBundle/Resources/config/routing/user.yml"
+    prefix:   /user
+ChildConnectCCSoftBundle_ajax:
+    resource: "@ChildConnectCCSoftBundle/Resources/config/routing/ajax.yml"
+    prefix:   /ajax
+
+ChildConnectCCSoftBundle_statistique:
+    resource: "@ChildConnectCCSoftBundle/Resources/config/routing/statistique.yml"
+    prefix:   /stats
+
+fos_user_security:
+    resource: "@ChildConnectUserBundle/Resources/config/routing/security.xml"
+fos_user_group:
+    resource: "@ChildConnectUserBundle/Resources/config/routing/group.xml"
+    prefix: /group
+
+ChildConnectCCSoftBundle_page:
+    resource: "@ChildConnectCCSoftBundle/Resources/config/routing/pages.yml"
+    prefix:   /page
+
+ChildConnectCCSoftBundle_logs:
+    resource: "@ChildConnectCCSoftBundle/Resources/config/routing/logs.yml"
+    prefix:   /logs
+
+tools:
+    pattern: /tools
+    defaults: { _controller: "ChildConnectCCSoftBundle:Tools:index" }

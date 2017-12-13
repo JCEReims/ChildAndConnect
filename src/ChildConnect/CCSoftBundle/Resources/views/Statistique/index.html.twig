@@ -1,0 +1,140 @@
+{% extends "ChildConnectCCSoftBundle::layout.html.twig" %}
+{% block header %}
+
+<script type="text/javascript" src="{{ asset(js_url~'hightcharts/js/highcharts.js')}}"></script>
+<script src="{{ asset(js_url~'hightcharts/js/modules/exporting.js')}}"></script>
+{% endblock %}
+{% block content %}
+    <h1>Statistiques</h1>
+    <div class="">	{{ form(form) }}</div>
+    
+    {% if(laQuestion is defined and results is defined) %}
+    <div id="container" style="width:100%; min-height: 500px; margin: 0 auto"></div>
+		<script type="text/javascript">
+		{% set cpt_color = 0 %}
+            $(function () {
+				 // Radialize the colors
+                    Highcharts.getOptions().colors = Highcharts.map(Highcharts.getOptions().colors, function(color) {
+                        return {
+                            radialGradient: { cx: 0.5, cy: 0.3, r: 0.7 },
+                            stops: [
+                                [0, color],
+                                [1, Highcharts.Color(color).brighten(-0.3).get('rgb')] // darken
+                            ]
+                        };
+                    });
+				var colors = Highcharts.getOptions().colors;
+				
+				  $('#container').highcharts({
+						chart: {
+							type: 'pie'
+						},
+						title: {
+							text: "{{ laQuestion.name|raw }}"
+						},
+						
+						plotOptions: {
+							pie: {
+								shadow: false,
+								center: ['50%', '50%']
+							},
+							series: {
+								dataLabels: {
+									enabled: true,
+									connectorWidth: 2,
+									connectorPadding: 10,
+									softConnector: false,
+									
+									
+								}
+							}
+						},
+						tooltip: {
+							valueSuffix: '%'
+						},
+						series: [
+						{% for slug,serie in results %}
+							{
+								name: "{{ serie.name|raw }}",
+								{% if serie.size is defined %} size : "{{serie.size}}", {%endif%}
+								{% if serie.innerSize is defined %} innerSize : "{{serie.innerSize}}", {%endif%}
+								{% if slug == 'serieOne' %}
+								dataLabels: {
+									
+									formatter: function() {
+										return this.y > 1 ? '<b>'+ this.point.name +':</b> '+ this.y +'%'  : null;
+									},
+									color: 'white',
+									{% if serie.distance is defined %} distance : {{serie.distance}}, {%endif%}
+								}
+								{% endif %}
+								{% if (slug == 'serieTwo' or slug == 'serieThree' )%}
+								dataLabels: {
+									{% if (slug == 'serieTwo' )%}distance:40,{% endif %}
+									formatter: function() {
+										// display only if larger than 1
+										//return this.y > 1 ? '<b>'+ this.point.name +':</b> '+ this.y +'%'  : null;
+										return '<b>'+ this.point.name +':</b> '+ this.y +'%' ;
+									},
+									zIndex : 999,
+									
+								}
+								{% endif %}
+								,
+								data: [{% if serie.responses is defined %}{% for data in serie.responses %}
+									{
+										y: {{ data.value}},
+										name: "{{ data.name|raw }}",
+										color: colors[{{cpt_color}}]
+									},
+									{% if cpt_color ==9 %}
+										{% set cpt_color = 0 %}
+									{% else %}
+										{% set cpt_color = cpt_color + 1 %}
+									{% endif %}
+								{%endfor%}{% endif %}]
+							},
+						{% endfor %}
+						]
+					});
+					
+            
+    
+				
+				});
+    
+            </script>
+     {% endif %}
+     {% if nothing is defined and nothing %}
+    <p> Aucunes statistiques durant cette période</p>
+     {% endif %}
+   
+	
+  <div class="clear"></div>
+  <script language="javascript">
+$(document).ready(function() {
+    $('.select_stats').change(function() {
+		$form = $(this).closest('form');
+		$form.submit();
+	});
+	 $('.btn_actif_inactif input[type=radio]').change(function() {
+		$form = $(this).closest('form');
+		$form.submit();
+	});
+	var d=new Date();
+	var today = d.getDate() + "-" + (d.getMonth() + 1)  + "-" + d.getFullYear();
+	$( "input.datePicker").datepicker({ 
+        dateFormat: 'dd-mm-yy',
+		changeYear : true,
+		defaultDate : today
+    });
+	$('.select_priority').change(function() {
+		if($(this).val() !="") 
+			$(this).closest('form').submit();	
+	});
+});
+</script>
+{% endblock %}
+{% block menuTop %}
+{{ render(controller('ChildConnectCCSoftBundle:Widget:menuTop', {  } ) ) }}
+{% endblock menuTop %} 

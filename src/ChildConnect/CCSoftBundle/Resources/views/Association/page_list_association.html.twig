@@ -1,0 +1,19 @@
+{% extends "ChildConnectCCSoftBundle::layout.html.twig" %}
+
+{% block content %}
+    
+    <ul class="list_associations">
+    {% for entity in entities %}
+    	<li>
+        	<h4>{{ entity.nom }}</h4>
+            <p>{{entity.adresse}}</p>
+            <p>{{entity.ville}}</p>
+            <p>{{entity.telephone}}</p>
+            <p>{{entity.email}}</p>
+            <p>{{entity.responsable}}</p>
+        </li>
+    {% endfor %}
+    </ul>
+    <div class="clear"></div>
+      
+{% endblock %}

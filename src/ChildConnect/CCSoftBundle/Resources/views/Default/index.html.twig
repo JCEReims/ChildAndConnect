@@ -1,0 +1,24 @@
+{% extends "ChildConnectCCSoftBundle::layout.html.twig" %}
+
+{% block content %}
+     {{ render(controller('ChildConnectCCSoftBundle:Widget:searchCodeBox' ,{'instance' : 1 } ) ) }}
+    <ul id="dashboard_btns">
+    	{% if is_granted("ROLE_USER") %}
+			<li><a href="{{ path('enfant') }}"  {% if id_body == 'enfant' %} class="active" {% endif %} ><span>Les enfants</span></a></li>
+		{% endif %}
+        {% if is_granted("ROLE_ADMIN_ASSOC") %}
+        	{#<li><a href="{{ path('statistique') }}" {% if id_body == 'stats' %} class="active" {% endif %} ><span>Statistique</span></a></li> #}
+		{% endif %}
+        {% if is_granted("ROLE_ADMIN") %}
+        	<li><a href="{{ path('quiz') }}"  {% if id_body == 'quiz' %} class="active" {% endif %} ><span>Questionnaires</span></a></li>
+            <li><a href="{{ path('association') }}"  {% if id_body == 'association' %} class="active" {% endif %} ><span>Les associations</span></a></li>
+            <li><a href="{{ path('user') }}" {% if id_body == 'user' %} class="active" {% endif %} ><span>Utilisateurs</span></a></li>     
+        {% endif %}
+        {% if is_granted("ROLE_SUPER_ADMIN") %}
+            <li><a href="{{ path('fos_user_group_list') }}"  {% if id_body == 'group' %} class="active" {% endif %} ><span>Groupe</span></a></li>
+        {% endif %}
+    </ul>
+{% endblock %}
+{% block menuTop %}
+{{ render(controller('ChildConnectCCSoftBundle:Widget:menuTop', { 'actions' : [ 'add_enfant','dashboard'] } ) ) }}
+{% endblock menuTop %}

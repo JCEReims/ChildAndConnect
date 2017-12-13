@@ -1,0 +1,51 @@
+enfant_list:
+    pattern:  /{orderBy}/{sortBy}/page-{page}/{nbrParPage}/list
+    defaults: { _controller: "ChildConnectCCSoftBundle:Enfant:indexList"}
+enfant:
+    pattern:  /{orderBy}/{sortBy}/page-{page}/{nbrParPage}/thumb
+    defaults: { _controller: "ChildConnectCCSoftBundle:Enfant:index"}
+
+enfant_show:
+    pattern:  /{id}/show
+    defaults: { _controller: "ChildConnectCCSoftBundle:Enfant:show" }
+
+enfant_new:
+    pattern:  /new
+    defaults: { _controller: "ChildConnectCCSoftBundle:Enfant:new" }
+
+enfant_create:
+    pattern:  /create
+    defaults: { _controller: "ChildConnectCCSoftBundle:Enfant:create" }
+    requirements: { _method: post }
+
+enfant_edit:
+    pattern:  /{id}/{quiz}/edit
+    defaults: { _controller: "ChildConnectCCSoftBundle:Enfant:edit" }
+
+enfant_update:
+    pattern:  /{id}/update
+    defaults: { _controller: "ChildConnectCCSoftBundle:Enfant:update" }
+    requirements: { _method: post|put }
+
+enfant_delete:
+    pattern:  /{id}/delete
+    defaults: { _controller: "ChildConnectCCSoftBundle:Enfant:delete" }
+    requirements: { _method: post|delete }
+
+enfant_profile:
+    pattern:  /profile-enfant/{codeEnfant}/{idAssociation}
+    defaults: { _controller: "ChildConnectCCSoftBundle:Enfant:profile" }
+
+enfant_search:
+    pattern:  /search/{orderBy}/{sortBy}/{typeShow}/{terms}
+    defaults: { _controller: "ChildConnectCCSoftBundle:Enfant:search", 'orderBy' : 'modifiedAt','sortBy' : 'DESC', 'typeShow' : 'list',  'terms' : NULL}
+    requirements: { _method: post|get }
+
+checkEnfantsExist_ajax:
+    pattern:  /checkEnfantsExist
+    defaults: { _controller: "ChildConnectCCSoftBundle:Enfant:checkEnfantsExistAjax" }
+    requirements: { _method: post }
+
+enfant_printFiche:
+    pattern:  /{enfant}/{quiz}/printEnfantFiche
+    defaults: { _controller: "ChildConnectCCSoftBundle:Quiz:printEnfantFiche" }

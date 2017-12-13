@@ -1,0 +1,21 @@
+{% extends "ChildConnectCCSoftBundle::layout.html.twig" %}
+
+{% block content %}
+<div class="inner_content">
+  <div class="sorting"> <a href="{{ path('enfant_search',{'orderBy':'nom','sortBy' : sortBy, 'typeShow' : 'list' ,'terms' : terms }) }}" title="Afficher par liste" class="btn_show_by_list"><i class="dashicons dashicons-list-view"></i></a> <a href="{{ path('enfant_search',{'orderBy':'nom','sortBy' : sortBy,'typeShow' : 'thumb' ,'terms' : terms }) }}" title="Afficher par miniature" class="btn_show_by_thumb"><i class="dashicons dashicons-exerpt-view"></i></a> </div>
+  <div class="clear"></div>
+  <div id="thumb_list_enfants" class="left">
+    <ul class="thumb_list_enfants">
+      {% for enfant in enfants %}
+      {% set last_photo = enfant.photo.first %}
+      <li><a href="{{ path('enfant_show', { 'id': enfant.id }) }}" class="img-thumb">{% if last_photo %}<img src="{{ asset('uploads/photos') ~ '/' ~ enfant.id ~ '/' ~ last_photo.path }}" />{% endif %}</a> <a  href="{{ path('enfant_show', { 'id': enfant.id }) }}">{{ enfant.prenom }} {{ enfant.nom }} </a> </li>
+      {% endfor %}
+    </ul>
+  </div>
+  <div id="stats_sidebar_home"> </div>
+  <div class="clear"></div>
+  </div>
+{% endblock %}
+{% block menuTop %}
+{{ render(controller('ChildConnectCCSoftBundle:Widget:menuTop', { 'options' : {'actif' : id_body}  } ) ) }}
+{% endblock menuTop %} 

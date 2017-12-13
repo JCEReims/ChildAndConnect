@@ -1,0 +1,31 @@
+question:
+    pattern:  /
+    defaults: { _controller: "ChildConnectCCSoftBundle:Question:index" }
+
+question_show:
+    pattern:  /{id}/show
+    defaults: { _controller: "ChildConnectCCSoftBundle:Question:show" }
+
+question_new:
+    pattern:  /new
+    defaults: { _controller: "ChildConnectCCSoftBundle:Question:new" }
+
+question_create:
+    pattern:  /create
+    defaults: { _controller: "ChildConnectCCSoftBundle:Question:create" }
+    requirements: { _method: post }
+
+question_edit:
+    pattern:  /{id}/edit
+    defaults: { _controller: "ChildConnectCCSoftBundle:Question:edit" }
+
+question_update:
+    pattern:  /{id}/update
+    defaults: { _controller: "ChildConnectCCSoftBundle:Question:update" }
+    requirements: { _method: post|put }
+
+question_delete:
+    pattern:  /{id}/delete
+    defaults: { _controller: "ChildConnectCCSoftBundle:Question:delete" }
+    requirements: { _method: post|delete }
+

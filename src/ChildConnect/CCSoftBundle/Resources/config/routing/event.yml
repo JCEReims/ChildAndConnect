@@ -1,0 +1,34 @@
+event:
+    pattern:  /{quiz}/{enfant}/enfant
+    defaults: { _controller: "ChildConnectCCSoftBundle:Event:index" }
+
+event_show:
+    pattern:  /{id}/{quiz}/show
+    defaults: { _controller: "ChildConnectCCSoftBundle:Event:show" }
+
+event_new:
+    pattern:  /{enfant}/{quiz}/new
+    defaults: { _controller: "ChildConnectCCSoftBundle:Event:new" }
+
+event_create:
+    pattern:  /{quiz}/create
+    defaults: { _controller: "ChildConnectCCSoftBundle:Event:create" }
+    requirements: { _method: post }
+
+event_edit:
+    pattern:  /{id}/{quiz}/edit
+    defaults: { _controller: "ChildConnectCCSoftBundle:Event:edit" }
+
+event_update:
+    pattern:  /{id}/{quiz}/update
+    defaults: { _controller: "ChildConnectCCSoftBundle:Event:update" }
+    requirements: { _method: post|put }
+
+event_delete:
+    pattern:  /{id}/{quiz}/delete
+    defaults: { _controller: "ChildConnectCCSoftBundle:Event:delete" }
+    requirements: { _method: post|delete }
+
+event_all:
+    pattern:  /all
+    defaults: { _controller: "ChildConnectCCSoftBundle:Event:EventsAll" }

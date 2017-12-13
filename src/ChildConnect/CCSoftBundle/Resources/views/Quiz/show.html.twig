@@ -1,0 +1,31 @@
+{% extends "ChildConnectCCSoftBundle::layout.html.twig" %}
+
+{% block content %}
+ {% if title_H1 is defined %}<h1 class="title_block">{{ title_H1 }}</h1><div class="clear"></div>{% endif %}
+
+
+    <table class="record_properties">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ entity.id }}</td>
+                <td>{{ entity.name }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+     {% if is_granted('ROLE_SUPER_ADMIN') %}   <ul class="record_actions">
+    <li>
+        <a href="{{ path('quiz') }}">
+            Back to the list
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('quiz_edit', { 'id': entity.id }) }}">
+            Edit
+        </a>
+    </li>
+    <li>{{ form(delete_form) }}</li>
+</ul>
+{% endif %}
+{% endblock %}

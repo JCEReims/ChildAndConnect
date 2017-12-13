@@ -1,0 +1,4 @@
+{% if is_granted("ROLE_ADMIN_ASSOC") %}
+      <li><a href="{{ path('quiz') }}"  {% if id_body == 'quiz' %} class="active" {% endif %}><span>Quiz</span></a></li>
+
+{% endif %}

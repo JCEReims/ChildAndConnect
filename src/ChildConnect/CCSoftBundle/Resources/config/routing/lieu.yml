@@ -1,0 +1,30 @@
+lieu:
+    pattern:  /
+    defaults: { _controller: "ChildConnectCCSoftBundle:Lieu:index" }
+
+lieu_show:
+    pattern:  /{id}/show
+    defaults: { _controller: "ChildConnectCCSoftBundle:Lieu:show" }
+
+lieu_new:
+    pattern:  /{quiz}/{enfant}/new
+    defaults: { _controller: "ChildConnectCCSoftBundle:Lieu:new" }
+
+lieu_create:
+    pattern:  /{quiz}/create
+    defaults: { _controller: "ChildConnectCCSoftBundle:Lieu:create" }
+    requirements: { _method: post }
+
+lieu_edit:
+    pattern:  /{id}/edit
+    defaults: { _controller: "ChildConnectCCSoftBundle:Lieu:edit" }
+
+lieu_update:
+    pattern:  /{id}/update
+    defaults: { _controller: "ChildConnectCCSoftBundle:Lieu:update" }
+    requirements: { _method: post|put }
+
+lieu_delete:
+    pattern:  /{id}/{quiz}/delete
+    defaults: { _controller: "ChildConnectCCSoftBundle:Lieu:delete" }
+    requirements: { _method: post|delete }

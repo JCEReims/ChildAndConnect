@@ -1,0 +1,25 @@
+{% trans_default_domain 'FOSUserBundle' %}
+
+<form action="{{ path('user_edit',{ 'id': user.id}) }}" {{ form_enctype(form) }} method="POST" class="fos_user_profile_edit form_classic form_not_expanded">
+    {{ form_widget(form) }}
+    <div>
+        <input type="submit" value="{{ 'profile.edit.submit'|trans }}" />
+        <div class="clear"></div>
+    </div>
+</form>
+<script language="javascript">
+$(document).ready(function(e) {
+
+	
+	$('#childconnect_user_profile_groups').find('input[type=checkbox]').each(function(index, element) {
+		var checkbox = $(element);
+		str = '<input type="radio" id="'+checkbox.attr('id')+'" name="'+checkbox.attr('name')+'" value="'+checkbox.attr('value')+'" required="required" ';
+		if(checkbox.attr('checked') == 'checked' )
+			str += 'checked="checked"';
+		str += '/>'
+        checkbox.replaceWith(str);
+    });
+	
+});
+</script>
+

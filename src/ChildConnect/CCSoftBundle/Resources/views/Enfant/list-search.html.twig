@@ -1,0 +1,46 @@
+{% extends "ChildConnectCCSoftBundle::layout.html.twig" %}
+
+{% block content %}
+<div class="inner_content">
+  <div class="sorting"> <a href="{{ path('enfant_search',{'orderBy':'nom','sortBy' : sortBy, 'typeShow' : 'list' ,'terms' : terms }) }}" title="Afficher par liste" class="btn_show_by_list"><i class="dashicons dashicons-list-view"></i></a> <a href="{{ path('enfant_search',{'orderBy':'nom','sortBy' : sortBy,'typeShow' : 'thumb' ,'terms' : terms }) }}" title="Afficher par miniature" class="btn_show_by_thumb"><i class="dashicons dashicons-exerpt-view"></i></a> </div>
+  <div class="clear"></div>
+  <table class="records_list">
+    <thead>
+      <tr>
+        <th><a href="{{ path('enfant_search',{'orderBy':'nom','sortBy' : sortBy,'typeShow' : typeShow ,'terms' : terms }) }}"  class="orderby">Nom</a></th>
+        <th><a href="{{ path('enfant_search',{'orderBy':'prenom', 'sortBy' : sortBy,'typeShow' : typeShow,'terms' : terms }) }}"  class="orderby">Prénom</a></th>
+        <th>Age</th>
+        <th><a href="{{ path('enfant_search',{'orderBy':'surnom', 'sortBy' : sortBy,'typeShow' : typeShow,'terms' : terms }) }}"  class="orderby">Surnom</a></th>
+        <th><a href="{{ path('enfant_search',{'orderBy':'name_association', 'sortBy' : sortBy,'typeShow' : typeShow,'terms' : terms}) }}"  class="orderby">Association</a></th>
+        <th><a href="{{ path('enfant_search',{'orderBy':'modifiedAt', 'sortBy' : sortBy,'typeShow' : typeShow,'terms' : terms}) }}"  class="orderby">Date modification</a></th>
+        {% if is_granted('ROLE_ADMIN_ASSOC') %}
+        <th>Modifier</th>
+        {% endif %} </tr>
+    </thead>
+    <tbody>
+    
+    {% for enfant in enfants %}
+    <tr>
+      <td>{% if  enfant.nom %}<a href="{{ path('enfant_show', { 'id': enfant.id }) }}">{{ enfant.nom }}</a>{% else %} Inconnu {% endif %}</td>
+      <td>{% if  enfant.prenom %}<a href="{{ path('enfant_show', { 'id': enfant.id }) }}">{{ enfant.prenom }}{% else %}Inconnu {% endif %}</a></td>
+      <td>{{ "now"|date("Y") - enfant.dateNaissance|date('Y') }} ans</td>
+      <td>{{ enfant.surnom }}</td>
+      <td><ul>
+          {% for assoc in  enfant.associations %}
+          <li>{{ assoc.nom }}</li>
+          {% endfor %}
+        </ul></td>
+      <td>{{ enfant.modifiedAt|date('d-m-Y H:i:s') }}</td>
+      {% if is_granted('ROLE_ADMIN_ASSOC') %}
+      <td><a href="{{ path('enfant_edit', { 'id': enfant.id, 'quiz': 1 }) }}" class="btn_edit btn_edit_enfant"><i class="genericon genericon-edit"></i></a></td>
+      {% endif %} </tr>
+    {% endfor %}
+      </tbody>
+    
+  </table>
+ </div>
+{% endblock %}
+    
+{% block menuTop %}
+{{ render(controller('ChildConnectCCSoftBundle:Widget:menuTop', {'options' : {'actif' : id_body} } ) ) }}
+{% endblock menuTop %} 

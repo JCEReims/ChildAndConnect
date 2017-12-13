@@ -1,0 +1,175 @@
+{% extends "ChildConnectCCSoftBundle::layout.html.twig" %}
+
+{% block content %} 
+<script type="text/javascript" src="//maps.googleapis.com/maps/api/js?key=AIzaSyAJyt2jybzykNutYkv8pqtqtQDVC3B02-A&sensor=false&language=fr&libraries=places"></script>
+<div class="block_localisation content_left content_element_enfant">{% include "ChildConnectCCSoftBundle:Enfant:infos_enfant.html.twig" %}
+  <div class="localisation left"> {% if title_H1 is defined %}
+    <h1 class="title_block">{{ title_H1 }}</h1>
+    {% endif %}
+    {{ form_start(form) }}
+    {% if is_granted('ROLE_ADMIN_ASSOC') %}
+    <div class="hidden"> {{ form_label(form.enfant) }}
+      {{ form_errors(form.enfant) }}
+      {{ form_widget(form.enfant) }} </div>
+    <div> {{ form_label(form.adresse) }}
+      {{ form_errors(form.adresse) }}
+      {{ form_widget(form.adresse) }}
+      <input type="button" value="Rechercher" onclick="codeAddress()">
+    </div>
+    <div> {{ form_label(form.commentaire) }}
+      {{ form_errors(form.commentaire) }}
+      {{ form_widget(form.commentaire) }} </div>
+    <div> {{ form_label(form.latitude) }}
+      {{ form_errors(form.latitude) }}
+      {{ form_widget(form.latitude) }} </div>
+    <div> {{ form_label(form.longitude) }}
+      {{ form_errors(form.longitude) }}
+      {{ form_widget(form.longitude) }} </div>
+    {% endif %}
+    <div id="map_canvas"></div>
+    {% if is_granted('ROLE_ADMIN_ASSOC') %}
+    <ul class="record_actions">
+      <li>{{ form_widget(form.submit) }}</li>
+    </ul>
+    {{ form_rest(form) }}
+    
+    {{ form_end(form) }}
+    {% endif %} </div>
+</div>
+<div class="clear"></div>
+<script language="javascript">
+$(document).ready(function() {
+    $('.adresse').keypress(function(e)
+        {
+            code= (e.keyCode ? e.keyCode : e.which);
+            if (code == 13) {
+				e.preventDefault();
+				codeAddress();
+			}
+				
+            
+        });
+});
+</script> 
+<script type="text/javascript" src="//maps.googleapis.com/maps/api/js?key=AIzaSyBbprS0KnyAvedCNLFEuNwkDC9-m5BWgoo&sensor=false&language=fr&libraries=places"></script> 
+<script language="javascript">
+		
+	var latlng = new google.maps.LatLng(34.67655854592756, -1.916341781616211);
+    var myOptions = {
+      zoom: 13,
+      center: latlng,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    }
+    map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+	var geocoder;
+	var map;
+	
+	var infowindow = new google.maps.InfoWindow();
+	var marker = null;
+	
+	var locations = [{% for lieu in lieux %}["{{lieu.adresse}}",{{lieu.latitude}},{{lieu.longitude}},{{lieu.id}},"{% spaceless %}{{ lieu.commentaire|raw }}{% endspaceless %}"],{% endfor %}];
+	var deletesForms = [{% for deleteForm in deletesForms %}'{{ form(deleteForm) }}',{% endfor %}];
+	var markers = new Array;
+	var infowindows = new Array;
+	var i;
+	 for (var i = 0; i < locations.length; i++) {
+		var loc = locations[i];
+		var myLatLng = new google.maps.LatLng(loc[1], loc[2]);
+		
+		markers[i] = new google.maps.Marker({
+			position: myLatLng,
+			map: map,
+			title: loc[0],
+			zIndex: loc[3]
+		});
+		infowindows[i] = new google.maps.InfoWindow({
+            content: '<div class="noscrollbar"><p>' + loc[0] +'</p><p class="commentaire">'+loc[4]+'</p>'+ deletesForms[i] + '</div>',
+        });
+		google.maps.event.addListener(markers[i], 'click', function(innerKey) {
+		  return function() {
+			 for (var k in infowindows)
+			 	 infowindows[k].close();
+			  infowindows[innerKey].open(map, markers[innerKey]);
+		  }
+		}(i));
+	  }
+	
+	geocoder = new google.maps.Geocoder();
+	google.maps.event.addListener(map, 'click', codeLatLngfromclick);
+	
+  
+	function codeLatLngfromclick(event) {
+		
+    var lat = event.latLng.lat();
+    var lng = event.latLng.lng();
+    var latlng = event.latLng;
+    
+	geocoder.geocode({'latLng': latlng}, function(results, status) {
+      
+	  if (status == google.maps.GeocoderStatus.OK) {
+       
+		if (results[0]) {
+			console.log(status);
+					if (marker != null) marker.setMap(null);
+			  
+				  marker = new google.maps.Marker({
+						  position: latlng,
+						  map: map
+				  });
+				 // map.setCenter(latlng);
+			  infowindow.setContent('<div id="info_window">' + results[0].formatted_address + '<br/><strong>Latitude :</strong> ' + Math.round(lat*1000000) / 1000000+ ' | <strong>Longitude :</strong> ' + Math.round(lng*1000000)/1000000 + '</div>');
+				  infowindow.open(map, marker);
+			  $('.adresse').val(results[0].formatted_address);
+			  $('.latitude_lieu').val(lat);
+			 $('.longitude_lieu').val(lng);
+        }
+		
+      } else {
+	 	 if (marker != null) marker.setMap(null);
+		  marker = new google.maps.Marker({
+				  position: latlng,
+				  map: map
+			  });
+			  map.setCenter(latlng);
+		  infowindow.setContent('<div id="info_window">' + 'Pas d\'adresse correspondant à ces coordonnées ou erreur de geocoding' + '<br/><strong>Latitude :</strong> ' + Math.round(lat*1000000)/1000000 + ' | <strong>Longitude :</strong> ' + Math.round(lng*1000000)/1000000 + '</div>');
+			  infowindow.open(map, marker);
+		 $('.adresse').val('Pas d\'adresse correspondant à ces coordonnées ou erreur de geocoding');
+		  $('.latitude_lieu').val(lat);
+		  $('.longitude_lieu').val(lng);
+		alert("Erreur de geocoding pour la raison suivante : " + status);
+	
+      }
+    });
+  } // codeLatLngfromclick
+
+  function codeAddress() {
+    var address = document.getElementById("childconnect_ccsoftbundle_lieu_adresse").value;
+    geocoder.geocode( { 'address': address}, function(results, status) {
+      if (status == google.maps.GeocoderStatus.OK) {
+		  if (marker != null) 
+		  	marker.setMap(null);
+       	 map.setCenter(results[0].geometry.location);
+        marker = new google.maps.Marker({
+           map: map,
+           position: results[0].geometry.location
+        });
+		 var lat = results[0].geometry.location.lat();
+    var lng = results[0].geometry.location.lng();
+		 infowindow.setContent('<div id="info_window">' + results[0].formatted_address + '<br/><strong>Latitude :</strong> ' + Math.round(lat*1000000) / 1000000+ ' | <strong>Longitude :</strong> ' + Math.round(lng*1000000)/1000000 + '</div>');
+		  infowindow.open(map, marker);
+		   $('.latitude_lieu').val(lat);
+			 $('.longitude_lieu').val(lng);
+      } else {
+        alert('aucune adresse trouvée');
+      }
+    });
+  }
+  
+</script> 
+{% endblock %} 
+{% block menuTop %}
+{{ render(controller('ChildConnectCCSoftBundle:Widget:menuTop', { 'options' : {'actif' : id_body}} ) ) }}
+{% endblock menuTop %}
+{% block menuEnfant %}
+{{ render(controller('ChildConnectCCSoftBundle:Widget:menuEnfant', { 'entities' : {'enfant' : enfant, 'quiz' : quiz }, 'options' : {'actif' : id_body}} ) ) }}
+{% endblock menuEnfant %}

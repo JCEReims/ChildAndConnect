@@ -1,0 +1,50 @@
+{% extends "ChildConnectCCSoftBundle::layout.html.twig" %}
+
+{% block content %}
+ {% if title_H1 is defined %}<h1 class="title_block">{{ title_H1 }}</h1><div class="clear"></div>{% endif %}
+<div class="block_list_event content_left"> 
+  <div class="table_all_events left">
+    <table class="records_list">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th> Nom  / Prénom </th>
+          
+          <th>Association</th>
+      
+          <th>Evénement</th>
+          <th>Commentaire</th>
+          {% if is_granted('ROLE_ADMIN_ASSOC') %}
+          <th>Actions</th>
+          {% endif %} </tr>
+      </thead>
+      <tbody>
+      
+      {% for entity in entities %}
+      <tr>
+        <td><a href="{{ path('event_show', { 'id': entity.id,'quiz' : quiz.id }) }}">{% if entity.date %}{{ entity.date|date('d-m-Y') }}{% endif %}</a></td>
+          <td>{{ entity.enfant.prenom ~ ' ' ~ entity.enfant.nom }}</td>
+          
+          <td><ul>{% for assoc in  entity.enfant.associations %}<li>{{ assoc.nom }}</li>{% endfor %}</ul></td>
+         
+        <td>{{ entity.evenement|nl2br }}</td>
+       
+        <td>{{ entity.commentaire }}</td>
+        {% if is_granted('ROLE_ADMIN_ASSOC') %}
+        <td><ul>
+            <li> <a href="{{ path('event_edit', { 'id': entity.id,'quiz' : quiz.id}) }}" class="btn_edit btn_edit_event"><i class="genericon genericon-edit"></i></a> </li>
+          </ul></td>
+        {% endif %} </tr>
+      {% endfor %}
+        </tbody>
+      
+    </table>
+  </div>
+  <div class="clear"></div>
+</div>
+
+<div class="clear"></div>
+{% endblock %}
+{% block menuTop %}
+{{ render(controller('ChildConnectCCSoftBundle:Widget:menuTop', { 'options' : {'actif' : id_body}} ) ) }}
+{% endblock menuTop %} 

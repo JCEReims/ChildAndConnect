@@ -1,0 +1,276 @@
+ {% extends "ChildConnectCCSoftBundle::layout.html.twig" %}
+
+{% block content %}
+
+{{ render(controller('ChildConnectCCSoftBundle:Widget:breadcrumbCreateEntant', {'params' : {'newEnfant' : newEnfant} }) ) }}
+<div class="block_enfant_profil content_element_enfant">
+  <div class="profil_enfant left"> {% if title_H1 is defined %}
+    <h1 class="title_block">{{ title_H1 }}</h1>
+    <div class="clear"></div>
+    {% endif %}
+    {{ form_start(form) }}
+    <div> {{ form_label(form.sexe) }}
+      {{ form_errors(form.sexe) }}
+      {{ form_widget(form.sexe) }} </div>
+    <div> {{ form_label(form.prenom) }}
+      {{ form_errors(form.prenom) }}
+      {{ form_widget(form.prenom) }} </div>
+    <div> {{ form_label(form.nom) }}
+      {{ form_errors(form.nom) }}
+      {{ form_widget(form.nom) }} </div>
+    <div> {{ form_label(form.surnom) }}
+      {{ form_errors(form.surnom) }}
+      {{ form_widget(form.surnom) }} </div>
+    <div id="photo"> {{ form_errors(form.photo) }}
+      {{ form_widget(form.photo) }} </div>
+    <div> {{ form_label(form.age) }}
+      {{ form_errors(form.age) }}
+      {{ form_widget(form.age) }} </div>
+    <div> {{ form_label(form.dateNaissance) }}
+      {{ form_errors(form.dateNaissance) }}
+      {{ form_widget(form.dateNaissance) }} </div>
+    <div> {{ form_label(form.signeDistinctif) }}
+      {{ form_errors(form.signeDistinctif) }}
+      {{ form_widget(form.signeDistinctif) }} </div>
+    <div> {{ form_label(form.villeOrigine) }}
+      {{ form_errors(form.villeOrigine) }}
+      {{ form_widget(form.villeOrigine) }} </div>
+    <div> {{ form_label(form.paysOrigine) }}
+      {{ form_errors(form.paysOrigine) }}
+      {{ form_widget(form.paysOrigine) }} </div>
+    <div> {{ form_label(form.suiviPar) }}
+      {{ form_errors(form.suiviPar) }}
+      {{ form_widget(form.suiviPar) }} </div>
+    {% if is_granted('ROLE_ADMIN_ASSOC') %}
+    <div> {{ form_label(form.association_base) }}
+      {{ form_errors(form.association_base) }}
+      {{ form_widget(form.association_base) }} </div>
+    {% endif %}
+    <div> {{ form_label(form.associations) }}
+      {{ form_errors(form.associations) }}
+      {{ form_widget(form.associations) }} </div>
+    <div class="hidden"> {{ form_label(form.quiz) }}
+      {{ form_errors(form.quiz) }}
+      {{ form_widget(form.quiz) }} </div>
+    <div> {{ form_label(form.commentaire) }}
+      {{ form_errors(form.commentaire) }}
+      {{ form_widget(form.commentaire) }} </div>
+    <div> {{ form_label(form.dateEntree) }}
+      {{ form_errors(form.dateEntree) }}
+      {{ form_widget(form.dateEntree) }} </div>
+    <div> {{ form_label(form.dateSortie) }}
+      {{ form_errors(form.dateSortie) }}
+      {{ form_widget(form.dateSortie) }} </div>
+    <div> {{ form_label(form.actif) }}
+      {{ form_errors(form.actif) }}
+      {{ form_widget(form.actif) }} </div>
+    <div id="block_list_enfants_exist"><span></span>
+      <div></div>
+      <input type="checkbox" name="force" id="force_register" />
+      <label for"force_register">Cocher la case pour forcer l'enregistrement de l'enfant</label>
+    </div>
+    <ul class="record_actions">
+    <li>{{ form_widget(form.submit) }}
+    </li>
+    </ul>
+    {{ form_rest(form) }}
+    {{ form_end(form) }} </div>
+    <div class="clear"></div>
+</div>
+<script language="javascript">
+ $(document).ready(function() {
+	 $('#childconnect_ccsoftbundle_enfant_quiz_1').prop('checked',true);
+	 if($('#force_register').is(':checked')) 
+	 	$('#force_register').trigger('click');
+	/*$('button[type=submit]').click(function(e) {
+		e.preventDefault();
+		r= false;
+		if(!$('#force_register').is(':checked'))
+			$.ajax({
+				  type: "POST",
+				  data : {
+					  nom: $('#childconnect_ccsoftbundle_enfant_prenom').val(),
+					  prenom: $('#childconnect_ccsoftbundle_enfant_nom').val(),
+					  surnom:  $('#childconnect_ccsoftbundle_enfant_surnom').val(),
+				  },
+				  dataType: 'Json',
+				  url: "{{ path('checkEnfantsExist_ajax') }}",
+				  success: function(data) {
+					  if(data.enfants){
+						  $('#block_list_enfants_exist').children('span').html(data.message);
+						  $('#block_list_enfants_exist').children('div').html(data.enfants);
+						 $('#block_list_enfants_exist').slideDown(250);
+						  return false;
+					  } else {
+						  
+						   $('input[name="childconnect_ccsoftbundle_enfant[associations][]"]').each(function() {
+									if($(this).is(':checked'))
+										r = true;
+							});
+							  if(!r) {
+								  alert('merci de cocher une association');
+								  return false;
+							  }
+							  r =false;
+							  $('input[name="childconnect_ccsoftbundle_enfant[quiz][]"]').each(function() {
+								  if($(this).is(':checked'))
+									  r = true;
+							  });
+							  if(!r) {
+								  alert('merci de cocher un qestionnaire');
+								  return false;
+							  }
+							if(r)
+								$('form[name=childconnect_ccsoftbundle_enfant]').submit();
+					  }
+				  },
+				
+			  });// FIN AJAX
+			  
+		 return false;
+	});*/
+	
+	 $('form[name=childconnect_ccsoftbundle_enfant]').submit(function(){
+		var r = false
+		var assoc_checked=false;
+		var quiz_checked=false;
+		$('#block_list_enfants_exist').hide();
+		 if($('#childconnect_ccsoftbundle_enfant_photo_0_file').val() == '')
+		 	$('#childconnect_ccsoftbundle_enfant_photo_0_file').remove();
+		 $('input[name="childconnect_ccsoftbundle_enfant[associations][]"]').each(function() {
+				  if($(this).is(':checked'))
+					  assoc_checked = true;
+		  });
+			if(!assoc_checked) {
+				alert('merci de cocher une association');
+				return false;
+			}
+		 $('input[name="childconnect_ccsoftbundle_enfant[quiz][]"]').each(function() {
+				if($(this).is(':checked'))
+					quiz_checked = true;
+			});
+			if(!quiz_checked) {
+				alert('merci de cocher un qestionnaire');
+				return false;
+			}
+		if(!$('#force_register').is(':checked')) {
+			$.ajax({
+				  type: "POST",
+				  data : {
+					  nom: $('#childconnect_ccsoftbundle_enfant_prenom').val(),
+					  prenom: $('#childconnect_ccsoftbundle_enfant_nom').val(),
+					  surnom:  $('#childconnect_ccsoftbundle_enfant_surnom').val(),
+				  },
+				  dataType: 'Json',
+				  url: "{{ path('checkEnfantsExist_ajax') }}",
+				  success: function(data) {
+					  if(data.enfants){
+						  $('#block_list_enfants_exist').children('span').html(data.message);
+						  $('#block_list_enfants_exist').children('div').html(data.enfants);
+						 $('#block_list_enfants_exist').slideDown(250);
+						  return false;
+					  } else {
+						
+								$('#force_register').trigger('click');
+								$('form[name=childconnect_ccsoftbundle_enfant]').submit();
+							
+					  }
+				  },
+				
+			  });// FIN AJAX
+			}else {
+				return true
+			}
+	return false;
+		
+	 });
+	 $('.case_age').keydown(function (e) {
+		
+        // Allow: backspace, delete, tab, escape, enter and .
+        if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== -1 ||
+             // Allow: Ctrl+A
+            (e.keyCode == 65 && e.ctrlKey === true) || 
+             // Allow: home, end, left, right
+            (e.keyCode >= 35 && e.keyCode <= 39)) {
+                 // let it happen, don't do anything
+                 return;
+        }
+		
+        // Ensure that it is a number and stop the keypress
+        if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+			
+            e.preventDefault();
+        } 
+		
+    }).keyup(function(){
+		 $('.date_naissance').val(calcul_age($(this).val()));
+	});
+	
+	$( "input.datePicker").datepicker({ 
+		changeYear: true,
+		changeMonth: true,
+        dateFormat: 'dd-mm-yy',
+		yearRange: (new Date().getFullYear()-50) + ":"+ (new Date().getFullYear()),
+		onChangeMonthYear :  function  (year, month, inst) {
+			refreshDateNaissance (year, month, inst);
+		 },
+		 onChangeMonthMonth :  function  (year, month, inst) {
+			refreshDateNaissance (year, month, inst);
+		 },
+		onSelect : function(dateText, inst) {
+			var age = parseInt(new Date().getFullYear()) - parseInt(inst.currentYear);
+			$('#childconnect_ccsoftbundle_enfant_age').val(age);
+		}
+    });
+	//$('#childconnect_ccsoftbundle_enfant_photo').find('label').first().remove();
+	var photo = $($('#childconnect_ccsoftbundle_enfant_photo').attr('data-prototype').replace(/__photo__/g, 0)).find('div:last-child').html();
+	$('#photo').append(photo);
+	
+	$('#verificationCode').click(function() {
+		var idAssocs = new Array;
+		$('.select_assoc input[type=checkbox]:checked').each(function() {
+			idAssocs.push($(this).val());
+		});
+		var datas = { 'code' : $('#childconnect_ccsoftbundle_enfant_code').val(), 'idAssocs' : idAssocs }
+		$.ajax({
+			  type: "POST",
+			  data : datas,
+			  dataType: 'Json',
+			  url: "{{ path('checkCodeEnfantAvailable_ajax') }}",
+			  success: function(data) {
+			  },
+			  beforeSend: function() {			
+				  $('div.loader_submit').show(0);
+			   },
+			  complete: function() { 
+				  $('div.loader_submit').hide(0);
+			  }
+		  });// FIN AJAX
+		 
+		return false;
+	});
+	
+});
+function calcul_age(age) {
+	var d = new Date();
+	var month = d.getMonth()+1;
+	var day = d.getDate();
+	var year = d.getFullYear();
+	var output = (day<10 ? '0' : '') + day + '-' +  (month<10 ? '0' : '') + month + '-' + (year-age) ;
+	return output;
+}
+function refreshDateNaissance (year, month, inst) {
+	var day = inst.selectedDay + "";
+	if (day.length < 2) day = "0" + day;
+	var month = month + "";
+	if (month.length < 2) month = "0" + month;
+	$('#'+inst.id).val(day+"-"+month+"-"+year); 
+	
+	var age = parseInt(new Date().getFullYear()) - parseInt(year);
+	jQuery('#childconnect_ccsoftbundle_enfant_age').val(age);
+ }
+</script> 
+{% endblock %}
+{% block menuTop %}
+{{ render(controller('ChildConnectCCSoftBundle:Widget:menuTop', { } ) ) }}
+{% endblock menuTop %} 

@@ -1,0 +1,34 @@
+{% extends "ChildConnectCCSoftBundle::layout.html.twig" %}
+{% block content %}
+<h1>Export excel</h1>
+
+    <div class="">
+    	<p>Exporter la base de données  pour l'exploiter sous Excel ?</p>
+        {{ form(form) }}
+       </div>
+     <div class="clear"></div>
+     <script language="javascript">
+		$(document).ready(function() {
+			$('.select_association').prepend('<option value="all">Toutes</option>');
+			selected = false;
+			$('.select_association').children('option').each(function() {
+				if($(this).attr('selected'))
+					selected = true;
+			});
+			if(selected == false) {
+				$('.select_association').val('all');
+			}
+			var d=new Date();
+			var today = d.getDate() + "-" + (d.getMonth() + 1)  + "-" + d.getFullYear();
+			$( "input.datePicker").datepicker({ 
+				dateFormat: 'dd-mm-yy',
+				changeYear : true,
+				defaultDate : today
+			});
+			
+		});
+	</script>
+{% endblock %}
+{% block menuTop %}
+{{ render(controller('ChildConnectCCSoftBundle:Widget:menuTop', {  } ) ) }}
+{% endblock menuTop %} 

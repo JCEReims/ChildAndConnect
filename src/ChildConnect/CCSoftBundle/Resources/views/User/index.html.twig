@@ -1,0 +1,48 @@
+{% extends "ChildConnectCCSoftBundle::layout.html.twig" %}
+
+{% block content %}
+<div class="inner_content">
+     {% if title_H1 is defined %}<h1 class="title_block">{{ title_H1 }}</h1><div class="clear"></div>{% endif %}
+    <table class="records_list">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Association</th>
+                <th>Activé</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                <td><a href="{{ path('user_show', { 'id': entity.id }) }}">{{ entity.nom }}</a></td>
+                <td><a href="{{ path('user_show', { 'id': entity.id }) }}">{{ entity.prenom }}</a></td>
+                <td>{{ entity.username }}</td>
+                <td>{{ entity.email }}</td>
+                <td>{% if entity.association.nom is defined %} {{ entity.association.nom }} {% endif %}</td>
+                <td>{% if entity.enabled %} oui {% else %} non  {% endif %}</td>
+                <td>
+                <ul>
+                    <li>
+                        <a href="{{ path('user_edit', { 'id': entity.id }) }}" class="btn_edit"><i class="genericon genericon-edit"></i></a>
+                    </li>
+                </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% if is_granted('ROLE_ADMIN') %}
+<ul class="record_actions right ">
+  <li> <a href="{{ path('user_new') }}" class="btn_edit"> Ajouter un utilisateur </a> </li>
+</ul>
+<div class="clear"></div>
+{% endif %}
+</div>
+    {% endblock %}
+{% block menuTop %}
+{{ render(controller('ChildConnectCCSoftBundle:Widget:menuTop', {  'options' : {'actif' : id_body} } ) ) }}
+{% endblock menuTop %}

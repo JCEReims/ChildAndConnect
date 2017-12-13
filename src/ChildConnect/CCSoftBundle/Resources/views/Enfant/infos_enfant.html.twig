@@ -1,0 +1,9 @@
+
+<div class="photo_profil left" >
+ {% if (last_photo) %} <img src="{{ asset('uploads/photos') ~ '/' ~ enfant.id ~ '/' ~ last_photo.path }}"   />{% else %} {% if enfant.sexe == 'M' %}<img src="{{ asset(img_url~'grey-man-profil.png') }}" />{% else %} <img src="{{ asset(img_url~'grey-woman-profil.png') }}" /> {% endif %}{% endif %} 
+  <p class="nomprenom"> {% if enfant.prenom %} {{ enfant.prenom }}{% else %}Inconnu{% endif %} {% if enfant.nom %} <font style="text-transform:uppercase">{{ enfant.nom }}</font>{% else %}Inconnu{% endif %} </p>
+  <p><span>{{ enfant.surnom }}</span></p>
+  <p><span> {{ "now"|date("Y") - enfant.dateNaissance|date('Y') }} ans</span></p>
+ 
+  <!--<p class="code_enfant">{{ enfant.codeEnfant.code }}</p>--> 
+</div>

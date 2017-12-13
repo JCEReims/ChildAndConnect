@@ -1,0 +1,29 @@
+{% extends "ChildConnectCCSoftBundle::layout.html.twig" %}
+
+{% block content %}
+
+<form action="{{ path('user_create') }}" {{ form_enctype(form) }} method="POST" class="fos_user_registration_register form_classic form_not_expanded">
+    {{ form_widget(form) }}
+    <div>
+        <input type="submit" value="envoyer" />
+    </div>
+</form>
+<script language="javascript">
+$(document).ready(function() {
+    $('#childconnect_user_registration_groups').find('input[type=checkbox]').each(function(index, element) {
+		var checkbox = $(element);
+        checkbox.replaceWith('<input type="radio" id="'+checkbox.attr('id')+'" name="'+checkbox.attr('name')+'" value="'+checkbox.attr('value')+'" required="required"/>');
+    })
+	$(document).delegate('input[name="childconnect_user_registration[groups][]"]','click',function() {
+		if($(this).val()==3 || $(this).val()==4  ) {
+			$('#childconnect_user_registration_association').removeAttr('required');
+		} else {
+			$('#childconnect_user_registration_association').attr('required','required');
+		}
+	})
+});
+</script>
+    {% endblock %}
+{% block menuTop %}
+{{ render(controller('ChildConnectCCSoftBundle:Widget:menuTop', { } ) ) }}
+{% endblock menuTop %}

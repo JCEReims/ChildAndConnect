@@ -1,0 +1,57 @@
+{% extends "ChildConnectCCSoftBundle::layout.html.twig" %}
+
+{% block content %}
+<div class="inner_content">
+{% if sortBy == 'DESC'%} {% set sortBy_t = 'ASC' %} {% else %} {% set sortBy_t = 'DESC' %} {% endif %} 
+  <div class="sorting"> <a href="{{ path('enfant_list',{'orderBy':'nom','sortBy' : sortBy_t,'page' : page, 'nbrParPage' : nbrParPage }) }}" title="Afficher par liste" class="btn_show_by_list"><i class="dashicons dashicons-list-view"></i></a> <a href="{{ path('enfant',{'orderBy':'nom','sortBy' : sortBy_t,'page' : page, 'nbrParPage' : nbrParPage }) }}" title="Afficher par miniature" class="btn_show_by_thumb"><i class="dashicons dashicons-exerpt-view"></i></a> </div>
+  <div class="clear"></div>
+  <table class="records_list">
+    <thead>
+      <tr>
+        <th><a href="{{ path('enfant_list',{'orderBy':'nom','sortBy' : sortBy,'page' : page, 'nbrParPage' : nbrParPage }) }}"  class="orderby">Nom</a></th>
+        <th><a href="{{ path('enfant_list',{'orderBy':'prenom', 'sortBy' : sortBy,'page' : page, 'nbrParPage' : nbrParPage }) }}"  class="orderby">Prénom</a></th>
+        <th>Age</th>
+        <th><a href="{{ path('enfant_list',{'orderBy':'surnom', 'sortBy' : sortBy,'page' : page, 'nbrParPage' : nbrParPage }) }}"  class="orderby">Surnom</a></th>
+        <th><a href="{{ path('enfant_list',{'orderBy':'name_association', 'sortBy' : sortBy,'page' : page, 'nbrParPage' : nbrParPage }) }}"  class="orderby">Association</a></th>
+        <th><a href="{{ path('enfant_list',{'orderBy':'modifiedAt', 'sortBy' : sortBy,'page' : page, 'nbrParPage' : nbrParPage }) }}"  class="orderby">Date modification</a></th>
+        {% if is_granted('ROLE_ADMIN_ASSOC') %}
+        <th>Modifier</th>
+        {% endif %} </tr>
+    </thead>
+    <tbody>
+    
+    {% for enfant in enfants %}
+    <tr {% if(not enfant.actif) %}class="line_non_actif"{%endif%}>
+      <td>{% if  enfant.nom %}<a href="{{ path('enfant_show', { 'id': enfant.id }) }}">{{ enfant.nom }}</a>{% else %} Inconnu {% endif %}</td>
+      <td>{% if  enfant.prenom %}<a href="{{ path('enfant_show', { 'id': enfant.id }) }}">{{ enfant.prenom }}{% else %}Inconnu {% endif %}</a></td>
+      <td>{{ "now"|date("Y") - enfant.dateNaissance|date('Y') }} ans</td>
+      <td>{{ enfant.surnom }}</td>
+      <td><ul>
+          {% for assoc in  enfant.associations %}
+          <li>{{ assoc.nom }}</li>
+          {% endfor %}
+        </ul></td>
+      <td>{{ enfant.modifiedAt|date('d-m-Y H:i:s') }}</td>
+      {% if is_granted('ROLE_ADMIN_ASSOC') %}
+      <td><a href="{{ path('enfant_edit', { 'id': enfant.id, 'quiz': 1 }) }}" class="btn_edit btn_edit_enfant"><i class="genericon genericon-edit"></i></a></td>
+      {% endif %} </tr>
+    {% endfor %}
+      </tbody>
+    
+  </table>
+  {% if nombrePage is defined %}
+  <div class="pagination">
+    <ul>
+      {% if sortBy == 'DESC'%} {% set sortBy = 'ASC' %} {% else %} {% set sortBy = 'DESC' %} {% endif %} 
+      {# On utilise la fonction range(a, b) qui crée un tableau de valeurs entre a et b #}
+      {% for p in range(1, nombrePage) %} <li{% if p == page %} class="active"{% endif %}> <a href="{{ path('enfant_list',{'orderBy':orderBy, 'sortBy' : sortBy, 'page': p, 'nbrParPage' : nbrParPage}) }}">{{ p }}</a>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %} </div>
+{% endblock %}
+    
+{% block menuTop %}
+{{ render(controller('ChildConnectCCSoftBundle:Widget:menuTop', {'options' : {'actif' : id_body} } ) ) }}
+{% endblock menuTop %} 

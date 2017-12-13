@@ -1,0 +1,27 @@
+{% block menuTop %} 
+<ul class="menuEnfant-links">
+{% for btn in btns %}
+<li class="theme {% for class in btn.class %} {{ class }} {% endfor %}"><a href="{{btn.href}}" title="{{ btn.title }}" class="{% for class in btn.class %} {{ class }} {% endfor %} btn_menu-enfant"  {% if btn.slug is defined %} data-hash="{{btn.slug}}" {% endif %}><span>{{btn.title}}</span></a><span class="arrow-right under"></span><span class="arrow-right"></span>
+{% if(btn.sousMenu is defined) %}
+	<ul class="sous-menu">
+	{% for btnSousMenu in btn.sousMenu %}
+    <li><a href="{{btnSousMenu.href}}" title="{{ btnSousMenu.title }}"  class="{% for class in btnSousMenu.class %} {{ class }} {% endfor %}" {% if btnSousMenu.slug is defined %} data-hash="{{btnSousMenu.slug}}" {% endif %}><span>{{btnSousMenu.title}}</span></a></li>
+    {%endfor%}
+    
+    </ul>
+{% endif %}
+</li>
+{%endfor%}
+
+</ul>
+<div class="clear"></div>
+<script language="javascript">
+jQuery(document).ready(function($) {
+    $('.menuEnfant-links li.theme').each(function() {
+        if($(this).hasClass('actif')) {
+			$(this).prev('li').children('.under').addClass('blue');
+		}
+    });
+});
+</script>
+{% endblock %} 

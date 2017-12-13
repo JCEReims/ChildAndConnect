@@ -1,0 +1,35 @@
+<div class="fos_user_group_list">
+        <table border="0" class="records_list list_group">
+    	<tr>
+            <th>id</th>
+            <th> nom </th>
+            <th> Roles </th>
+            <th>action</th>
+		</tr>
+    {% for group in groups %}
+    	<tr>
+        	<td>
+            	{{ group.id }}
+            </td>
+        	<td>
+                   {{ group.getName() }}
+        </td>
+        <td>
+        	{% for role in group.roles %}
+        			{{ role }} <br />
+        	{% endfor %}
+        </td>
+        <td>
+        	   <a href="{{ path('fos_user_group_edit', {'groupName': group.getName()} ) }}">Edit</a>
+        </td>
+    {% endfor %}
+    </table>
+    
+    <ul class="actions">
+    <li>
+        <a href="{{ path('fos_user_group_new') }}" class="btn_create gradient">
+            Create a new entry
+        </a>
+    </li>
+</ul>
+</div>

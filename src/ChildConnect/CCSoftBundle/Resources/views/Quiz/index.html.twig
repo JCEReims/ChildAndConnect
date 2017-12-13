@@ -1,0 +1,30 @@
+{% extends "ChildConnectCCSoftBundle::layout.html.twig" %}
+
+{% block content %}
+<div class="inner_content">
+ {% if title_H1 is defined %}<h1 class="title_block">{{ title_H1 }}</h1><div class="clear"></div>{% endif %}
+<table class="records_list">
+  <thead>
+    <tr>
+      <th>Nom</th>
+      {% if is_granted('ROLE_SUPER_ADMIN') %}<th>Modifier</th>{% endif %}
+      <th>Questions / Réponse</th>
+    </tr>
+  </thead>
+  <tbody>
+  
+  {% for entity in entities %}
+  <tr>
+    <td> {% if is_granted('ROLE_SUPER_ADMIN') %} <a href="{{ path('quiz_show', { 'id': entity.id }) }}">{{ entity.name }} </a> {% else %} {{ entity.name }} {% endif %} </td>
+    {% if is_granted('ROLE_SUPER_ADMIN') %}<td><a href="{{ path('quiz_edit', { 'id': entity.id }) }}" class="btn_edit btn_edit_quiz"><i class="genericon genericon-edit"></i></a></td>{% endif %}
+    <td><a href="{{ path('quiz_remplir', { 'id': entity.id }) }}" class="btn_edit btn_remplir_quiz"><i class="genericon genericon-summary"></i></a></td>
+  </tr>
+  {% endfor %}
+    </tbody>
+  
+</table>
+</div>
+{% endblock %}
+{% block menuTop %}
+{{ render(controller('ChildConnectCCSoftBundle:Widget:menuTop', { 'options' : {'actif' : id_body} } ) ) }}
+{% endblock menuTop %} 

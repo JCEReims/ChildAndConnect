@@ -1,0 +1,145 @@
+{% extends "ChildConnectCCSoftBundle::layout.html.twig" %}
+
+{% block content %}
+<ul class="record_actions">
+<li class="right"><a href="{{ path('enfant_printFiche', {enfant : enfant.id,'quiz' : quiz.id }) }}" class="btn_print_fiche_enfant" target="_blank" title="Imprimer la fiche de l'enfant avec les réponses"><i class="genericon genericon-print" alt="f469"></i></a></li>
+</ul>
+<div class="block_show_quiz_enfant content_left content_element_enfant">{% include "ChildConnectCCSoftBundle:Enfant:infos_enfant.html.twig" %}
+  <div class="questions_responses_enfant left">
+   
+    <div class="response_enfant "> {% set  cpt = 1 %}
+      {% set  j = 1 %}
+      {% set  prev_themeQuestion = "" %}
+      
+      {% for key_q,questionResponse in questionsResponses %}
+      {% set  themeQuestion = questionResponse.theme %}
+      {% if (themeQuestion != prev_themeQuestion and prev_themeQuestion != "") %}{% set cpt = cpt + 1 %} </div>
+    {% endif %}
+    {% if (themeQuestion != prev_themeQuestion) %}
+    <div id="tab_{{ themeQuestion }}" {% if( cpt  > 0 ) %} style=" display:none " {% endif %} class="block_question_theme" data-slide="{{ key_q }}" data-nicename="{{ questionResponse.theme_nicename}}"> <h1 class="title_block">{{questionResponse.theme_nicename }}</h1> {% endif %}
+      <div  class=" block_question">
+        <h3>{{questionResponse.name }}</h3>
+        <ul class="answers">
+          {% if(questionResponse.responses is defined and (questionResponse.responseType == 'textarea' or questionResponse.responseType == 'text')) %}
+          <li>{{ questionResponse.responses }} </li>
+          {% elseif(questionResponse.responseType == 'radio') %}
+          {% for key_rp,rp in questionResponse.responseProposal %}
+          {% if questionResponse.responses is defined  %}
+          <li> 
+            <!--<span class="genericon {% if(questionResponse.responses is defined and  (key_rp in questionResponse.responses|keys)) %}  genericon-aside {% endif %}"></span>--> 
+            <span class="{% if(questionResponse.responses is defined and  (key_rp in questionResponse.responses|keys)) %} responded {% endif %}">{{ rp }} </span> </li>
+          {% endif %}
+          {% endfor %}
+          {% endif %}
+        </ul>
+      </div>
+      {% if questionResponse.commentaire is defined  %}
+      <div class="commentaire_block">
+        <div class="inner_commentaire"><span class="add_comment"><i class="genericon genericon-chat"></i>Commentaire</span>
+          <div class="clear"></div>
+          {{ questionResponse.commentaire }}</div>
+      </div>
+      {% endif %}
+      {% set  prev_themeQuestion = themeQuestion %}
+      {% if (j == questionsResponses|length ) %}</div>
+    {% endif %}
+    {% set  j = j+1 %}
+    
+    {% endfor %} </div>
+  <div class="clear"></div>
+  <ul class="record_actions ">
+  <li class="left"> <a href="#" class="prev-slide"><i class="genericon genericon-rewind"></i></a> <a href="#" class="next-slide"><i class="genericon genericon-fastforward"></i></a> </li>
+  {% if is_granted('ROLE_ADMIN_ASSOC') %}
+  <li><a href="{{ path('quiz_complete', { 'quiz': quiz.id, 'enfant': enfant.id}) }}" data-url-base="{{ path('quiz_complete', { 'quiz': quiz.id, 'enfant': enfant.id}) }}" class="btn_edit edit_quiz_enfant" >Modifier les réponses</a></li>
+  {% endif %}
+</ul>
+</div>
+<div class="clear"></div>
+
+</div>
+<script language="javascript">
+$(document).ready(function() {
+	function RefresMenuEnfant(_hash) {
+		$('.menuEnfant-links').find('a').removeClass('actif');
+		$('.menuEnfant-links').find('li').removeClass('actif');
+		$('.menuEnfant-links').find('li').children('.under').removeClass('blue');
+		$('.menuEnfant-links').find('a').each(function() {
+            if(typeof $(this).attr('data-hash') != 'undefined' && $(this).attr('data-hash') == _hash ) {
+				$(this).addClass('actif');
+				$(this).parent('li').addClass('actif');
+				$(this).parent('li').prev().children('.under').addClass('blue');
+			}
+        });
+		url = $('a.edit_quiz_enfant').attr('data-url-base');
+		$('a.edit_quiz_enfant').attr('href',url+'#'+_hash);
+	}
+    var hash = window.location.hash.replace("#", "");
+	if(hash) {
+		$('#tab_'+hash).show();
+		$('.menuEnfant-links').find('a').each(function() {
+            if( $(this).attr('data-hash') == hash ) {
+				$(this).addClass('actif');
+				$(this).parent('li').addClass('actif');
+				$(this).parent('li').prev().children('.under').addClass('blue');
+			}
+        });
+	}
+	else {
+		hash="liens-sociaux";
+		window.location.hash = '#'+hash;
+		$('#tab_'+hash).show();
+	}
+	url = $('a.edit_quiz_enfant').attr('href');
+	$('a.edit_quiz_enfant').attr('href',url+'#'+hash);
+	$('a.prev-slide').click(function() {
+		prev = $('.block_question_theme:visible').prev('.block_question_theme');
+		if(prev.length) {
+			window.scroll(0, 0);
+			$('.block_question_theme:visible').hide();
+			prev.show();
+			hash = prev.attr('id').replace("tab_", "")
+			window.location.hash = '#'+hash;
+			 RefresMenuEnfant(hash);
+			
+			if(prev.next('.block_question_theme').length !=0 )
+				$('a.next-slide').show();
+				
+		}
+		return false;
+	});
+	$('a.next-slide').click(function() {
+		next = $('.block_question_theme:visible').next('.block_question_theme');
+		if(next.length) {
+			window.scroll(0, 0);
+			$('.block_question_theme:visible').hide();
+			next.show();
+			hash = next.attr('id').replace("tab_", "")
+			window.location.hash = '#'+hash;
+			RefresMenuEnfant(hash);
+			if(next.next('.block_question_theme').length ==0 ) {
+				$(this).hide();
+			}
+		} else {
+			$(this).hide();
+		}
+		return false;
+	});
+	
+	$('a.btn_menu-enfant').click(function() {
+		window.scroll(0, 0);
+		$('.block_question_theme:visible').hide();
+		var _hash = $(this).attr('data-hash'); 
+		$('#tab_'+_hash).show()
+		RefresMenuEnfant(_hash);
+		
+	});
+	
+});
+</script> 
+{% endblock %}
+{% block menuTop %}
+{{ render(controller('ChildConnectCCSoftBundle:Widget:menuTop', { 'options' : {'actif' : id_body}} ) ) }}
+{% endblock menuTop %} 
+{% block menuEnfant %}
+{{ render(controller('ChildConnectCCSoftBundle:Widget:menuEnfant', { 'entities' : {'enfant' : enfant, 'quiz' : quiz }, 'options' : {'actif' : id_body}} ) ) }}
+{% endblock menuEnfant %}

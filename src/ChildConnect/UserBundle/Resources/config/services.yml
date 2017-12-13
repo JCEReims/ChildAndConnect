@@ -1,0 +1,6 @@
+services:
+    childconnect_user.registration.form.type:
+        class: ChildConnect\UserBundle\Form\Type\RegistrationFormType
+        arguments: [%fos_user.model.user.class%]
+        tags:
+            - { name: form.type, alias: childconnect_user_registration }

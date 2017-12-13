@@ -1,0 +1,17 @@
+{% block menuTop %} 
+<ul class="menutop-links">
+{% for btn in btns %}
+<li class="{% if  btn.class_li is defined %}{% for class in btn.class_li %} {{ class }} {% endfor %}{%endif%}"><a href="{{btn.href}}"  class="{% for class in btn.class %} {{ class }} {% endfor %} btn_menu-top"><span>{{btn.title}}</span></a>
+{% if(btn.sousMenu is defined) %}
+	<ul class="sous-menu {% if  btn.sousMenuClass.class is defined %}{% for class in btn.sousMenuClass.class %} {{ class }} {% endfor %}{%endif%} ">
+	{% for btnSousMenu in btn.sousMenu %}
+    <li><a  href="{{btnSousMenu.href}}"   class="{% for class in btnSousMenu.class %} {{ class }} {% endfor %}" {% if btnSousMenu.options is defined  %} {{ btnSousMenu.options }} {% endif %}><span>{{btnSousMenu.title}}</span></a></li>
+    {%endfor%}
+    
+    </ul>
+{% endif %}
+</li>
+{%endfor%}
+</ul>
+<div class="clear"></div>
+{% endblock %} 

@@ -1,0 +1,19 @@
+user:
+    pattern:  /
+    defaults: { _controller: "ChildConnectCCSoftBundle:User:index" }
+user_new:
+    pattern:  /new
+    defaults: { _controller: "ChildConnectUserBundle:Registration:register" }
+user_create:
+    pattern:  /admin/register
+    defaults: { _controller: "ChildConnectUserBundle:Registration:register"}
+    requirements: { _method: post }
+user_registration_confirmed:
+    pattern:  /admin/confirmed
+    defaults: { _controller: "ChildConnectUserBundle:Registration:confirmed" }
+user_edit:
+    pattern:  /{id}/edit
+    defaults: { _controller: "ChildConnectUserBundle:Profile:edit" }
+user_show:
+    pattern:  /{id}/show
+    defaults: { _controller: "ChildConnectUserBundle:Profile:show" }

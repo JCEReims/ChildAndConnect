@@ -1,0 +1,9 @@
+statistique:
+    pattern:  /
+    defaults: { _controller: "ChildConnectCCSoftBundle:Statistique:index" }
+export_excel:
+    pattern:  /export-excel
+    defaults: { _controller: "ChildConnectCCSoftBundle:Statistique:exportExcel" }
+do_export_excel:
+    pattern:  /do-export-excel
+    defaults: { _controller: "ChildConnectCCSoftBundle:Statistique:doExportExcel" }

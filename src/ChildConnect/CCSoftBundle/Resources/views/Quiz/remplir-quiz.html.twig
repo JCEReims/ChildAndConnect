@@ -1,0 +1,207 @@
+{% extends "ChildConnectCCSoftBundle::layout.html.twig" %}
+
+{% block content %} 
+<div class="inner_content">
+ {% if title_H1 is defined %}<h1 class="title_block">{{ title_H1 }}</h1><div class="clear"></div>{% endif %}
+<script language="javascript">
+var tableIndexQuestion = new Array();
+var tableIndexResponse = new Array();
+</script>
+
+{% macro prototypeQuestion(quest) %}
+<div class="proto-question">
+  <div class="question question__question__">
+    <p>{{ form_label(quest.name) }}
+      {{form_widget(quest.name)}}{{form_errors(quest.name)}} </p>
+    <p>
+      <label>Thème de la question :</label>
+      {{form_widget(quest.themeQuestion)}} </p>
+    <p>
+      <label class="typeResponse">Type de réponse :</label>
+      {{form_widget(quest.responseType)}}{{form_errors(quest.responseType)}} </p>
+    <p>
+      <label class="typeResponse">Position : </label>
+      {{form_widget(quest.ordre)}}{{form_errors(quest.ordre)}} </p>
+    <a href="#"  class="remove_question">supprimer cette question</a> </div>
+  <hr />
+</div>
+<div class="proto-response"> {{ _self.prototypeResponses(quest.responseProposal.vars.prototype) }} </div>
+{% endmacro %} 
+    
+{% macro prototypeResponses(responseProposal) %}
+  	{{ form_errors(responseProposal) }}
+    {{form_widget(responseProposal.response)}}{{form_errors(responseProposal.response)}}
+     <label>Valeur : </label> {{form_widget(responseProposal.value)}}{{form_errors(responseProposal.value)}}
+     <label>Position : </label> {{form_widget(responseProposal.ordre)}}{{form_errors(responseProposal.ordre)}} <a href="#"  class="remove_response"><i class="genericon genericon-close"></i></a>
+{% endmacro %} 
+    
+    
+{% macro prototypeQuestList(quest,indexQuest) %}
+   {{ form_errors(quest) }} 
+    <script language="javascript">
+	 	tableIndexQuestion.push( {{ indexQuest }});
+	 </script>
+    <div class="question question{{ indexQuest }}" data-max-response="{{ quest.responseType.vars.data.maxResponse }}" data-num-quest="{{indexQuest}}">
+  <p>
+        <label class="label_dest_num">La question : </label>
+        {{form_widget(quest.name)}}{{form_errors(quest.name)}} </p>
+  <p>
+        <label>Thème de la question :</label>
+        {{form_widget(quest.themeQuestion)}} </p>
+  <p>
+        <label class="typeResponse">Type de réponse :</label>
+        {{form_widget(quest.responseType)}}{{form_errors(quest.responseType)}} </p>
+  <p>
+        <label class="typeResponse">Position : </label>
+        {{form_widget(quest.ordre)}}{{form_errors(quest.ordre)}} </p>
+  {% if quest.responseType.vars.form.vars.value != 6 %}
+  <p>
+  {{ form_label(quest.activeStats) }}  {{form_widget(quest.activeStats)}}
+  </p>
+   
+  <p>
+  {{ form_label(quest.activeIntegration) }}  {{form_widget(quest.activeIntegration)}}
+  </p>{% endif %}
+  <a href="#"  class="remove_question"><i class="genericon genericon-trash"></i>supprimer cette question</a><br class="clear" />
+  {% if(quest.responseType.vars.data.typeField != "text" and quest.responseType.vars.data.typeField != "textarea") %}
+  <div class="block_responses">
+        <h3>Les réponses </h3>
+        <ul class="list_responses">
+      {% for indexResponse, response in quest.responseProposal %}
+      <li>{{ _self.prototypeResponseList(response,indexQuest,indexResponse) }}</li>
+      {% endfor %}
+    </ul>
+        <a href="#" class="add_response"><i class="genericon genericon-reply"></i>Ajouter une réponse</a><br class="clear" />
+      </div>
+  {% endif %} </div>
+    <hr />
+{% endmacro %} 
+    
+{% macro prototypeResponseList(response,indexQuest,indexResponse) %} 
+	<script language="javascript">
+            tableIndexResponse.push( {{ indexResponse }});
+        </script> 
+        {{form_widget(response.response)}}{{form_errors(response.response)}} 
+          <label>Valeur : </label> {{form_widget(response.value)}}{{form_errors(response.value)}}
+         <label>Position : </label>{{form_widget(response.ordre)}}{{form_errors(response.ordre)}} <a href="#"  class="remove_response"><i class="genericon genericon-close"></i></a>
+{% endmacro %}
+     
+<div  id="prototype" style="display:none"> {{ _self.prototypeQuestion(form.question.vars.prototype) }} </div>
+{{ form_start(form) }}
+<div id="block_questions"> {% for key, question in form.question %}
+  {{_self.prototypeQuestList(question,key)}}
+  {% endfor %} </div>
+{{ form_widget(form.submit) }}
+<div class="hidden"> {{ form_label(form.name) }}
+  {{form_widget(form.name)}}{{form_errors(form.name)}}
+  {{ form_widget(form._token) }}
+  {{ form_rest(form) }} </div>
+{{ form_end(form) }}
+<ul class="actions">
+  <li><a href="#" class="add_question gradient"><span>+</span>Ajouter une question</a></li>
+</ul>
+<div class="clear"></div>
+<div id="confirmBox_deleteQuestion">
+  <p>Voulez-vous supprimer cette Question ?</p>
+  <p>Si vous supprimez la question vous supprimez aussi les réponses des enfants </p>
+</div>
+<div id="confirmBox_deleteResponse">
+  <p>Voulez-vous supprimer ce type de réponse  ?</p>
+  <p>Si vous supprimez ce type de réponse, vous supprimez aussi les réponses des enfants </p>
+</div>
+<script language="javascript">
+$(document).ready(function() {
+     if ($('#block_questions div.question').length === 0) {
+			
+	 		tableIndexQuestion.push(0);
+			tableIndexResponse.push(0);
+			add_question();
+	 }
+	 $("#confirmBox_deleteQuestion").dialog({
+		autoOpen:false,
+		resizable: false,
+		height:'auto',
+		modal: true,
+		buttons: {
+			"Supprimer": function() {
+				remove_question($(this).data('ele'));
+				$( this ).dialog( "close" );
+			},
+		Cancel: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+	});//end dialog
+	
+	$("#confirmBox_deleteResponse").dialog({
+		autoOpen:false,
+		resizable: false,
+		height:'auto',
+		modal: true,
+		buttons: {
+			"Supprimer": function() {
+				$($(this).data('ele')).closest('li').remove();
+				$( this ).dialog( "close" );
+			},
+		Cancel: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+	});//end dialog
+	
+	$('a.add_question').click(function() {
+		tableIndexQuestion.push( tableIndexQuestion[tableIndexQuestion.length-1]+1);
+		add_question();
+		return false;
+	});
+	
+	 $(document).delegate('a.remove_question','click', function(event) {
+		$("#confirmBox_deleteQuestion").data('ele',$(this)).dialog('open');
+		return false;
+	});
+	$(document).delegate('a.remove_response','click', function(event) {
+		$("#confirmBox_deleteResponse").data('ele',$(this)).dialog('open');
+		//$(this).closest('li').remove();
+		return false;
+	});
+	
+	 $(document).delegate('a.add_response','click', function(event) {
+		 if(!tableIndexResponse.length) {
+			tableIndexResponse.push(0);
+			tableIndexResponse.push( tableIndexResponse[tableIndexResponse.length-1]);
+		 } else
+		 	tableIndexResponse.push( tableIndexResponse[tableIndexResponse.length-1]+1);
+		ele_parent = $(this).parent('.block_responses').closest('div.question');
+		
+		num_quest = parseInt(ele_parent.attr('data-num-quest'));
+		max_response = parseInt(ele_parent.attr('data-max-response'));
+		
+		if( ele_parent.find('ul.list_responses').children('li').length < max_response )
+			add_response(ele_parent.find('ul.list_responses'),num_quest);
+		return false;
+	});
+});
+
+
+function add_question(){
+	var indexQuestion = tableIndexQuestion[tableIndexQuestion.length-1];
+	var row = $('div#prototype .proto-question').html().replace(/__question__/g, indexQuestion);
+	$('#block_questions').append(row);   
+}
+function remove_question(ele) {
+	if ($('#block_questions div.question').length > 1) 
+		ele.closest('div.question').remove();
+}
+function add_response(ul,num_quest){
+	
+	var indexResponse = tableIndexResponse[tableIndexResponse.length-1];
+	var row = $('div#prototype div.proto-response').html().replace(/__question__/g, num_quest).replace(/__responseProposal__/g, indexResponse);
+	
+	$(ul).append('<li>'+row+'</li>');   
+}
+</script> 
+</div>
+{% endblock %}
+{% block menuTop %}
+{{ render(controller('ChildConnectCCSoftBundle:Widget:menuTop', {  } ) ) }}
+{% endblock menuTop %} 

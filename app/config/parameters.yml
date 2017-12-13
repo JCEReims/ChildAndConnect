@@ -1,0 +1,15 @@
+# This file is auto-generated during the composer install
+parameters:
+    database_driver: pdo_mysql
+    database_host: mysql51
+    database_port: null
+    database_name: ccapplicqesoft
+    database_user: ccappli
+    database_password: xxxxxx
+    mailer_transport: smtp
+    mailer_host: 127.0.0.1
+    mailer_user: null
+    mailer_password: null
+    locale: fr
+    secret: a7e2e8cb11ab43f3853ca8ab881d59bd
+    session_max_idle_time: 1800

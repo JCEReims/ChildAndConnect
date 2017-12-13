@@ -1,0 +1,18 @@
+{% block menuTop %} 
+<ul class="menutop-links">
+{% for btn in btns %}
+<li><a href="{{btn.href}}" title="{{ btn.title }}" class="{% for class in btn.class %} {{ class }} {% endfor %} btn_menu-top"><span>{{btn.title}}</span></a>
+{% if(btn.sousMenu is defined) %}
+	<ul class="sous-menu">
+	{% for btnSousMenu in btn.sousMenu %}
+    <li><a href="{{btnSousMenu.href}}" title="{{ btnSousMenu.title }}"  class="{% for class in btnSousMenu.class %} {{ class }} {% endfor %}" data-hash="{{btnSousMenu.slug}}"><span>{{btnSousMenu.title}}</span></a></li>
+    {%endfor%}
+    
+    </ul>
+{% endif %}
+</li>
+{%endfor%}
+<li><a href="{{ asset('uploads/pdfs/Questionnaire_association.pdf') }}" style="width:88px;line-height:18px;">Questionnnaire PDF</a></li>
+</ul>
+<div class="clear"></div>
+{% endblock %} 

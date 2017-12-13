@@ -1,0 +1,11 @@
+
+	{{ form(form) }}
+
+<script language="javascript">
+$(document).ready(function() {
+    $('.select_stats').change(function() {
+		$form = $(this).closest('form');
+		$form.submit();
+	});
+});
+</script>

@@ -1,0 +1,20 @@
+{% extends "ChildConnectCCSoftBundle::layout.html.twig" %}
+
+{% block content %}
+ {% if title_H1 is defined %}<h1 class="title_block">{{ title_H1 }}</h1><div class="clear"></div>{% endif %}
+
+<form action="{{ path('tools') }}" method="post" class="{% if class_form is defined %}{{ class_form }}{% endif %} std">
+     <p>
+        <h2> Effacer le Cache 
+        <button type="submit" value="videCache" name="action">Effacer le cache</button>
+        </h2>
+    </p>
+     <p>
+        <h2> associer Assocation de base à l'enfant
+        <button type="submit" value="assoc_base_enfant" name="action">associer</button>
+        </h2>
+    </p>
+</form>
+
+
+{% endblock content %} 

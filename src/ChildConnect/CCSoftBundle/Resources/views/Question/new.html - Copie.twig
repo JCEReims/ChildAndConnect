@@ -1,0 +1,88 @@
+{% extends "ChildConnectCCSoftBundle::layout.html.twig" %}
+
+{% block content %}
+ {% if title_H1 is defined %}<h1 class="title_block">{{ title_H1 }}</h1><div class="clear"></div>{% endif %}
+    <h1>{{ entity.name }}</h1>
+	{% macro prototypeQuestion(quest) %}
+    <div class="question"> 
+    	 {{ form_label(quest.name) }}
+    	{{form_widget(quest.name)}}{{form_errors(quest.name)}} 
+        {{form_widget(quest.responseType)}}{{form_errors(quest.responseType)}} 
+        <a href="#"  class="remove_question">supprimer cette question</a>
+    </div>
+	{% endmacro %} 
+   
+    
+    <div  id="prototype" style="display:none">
+    {{ _self.prototypeQuestion(form.name.vars.prototype) }}
+    </div>
+     {{ form_start(form) }}
+    <div id="block_questions"></div>
+    {{ form_rest(form) }}
+    {{ form_end(form) }}
+    <ul>
+      <li><a href="#" class="add_question gradient"><span>+</span>Ajouter une question</a></li>
+       
+    </ul>
+    <div id="confirmBox_deleteQuestion">
+  	<p>Voulez-vous supprimer cette Question ?</p>
+	</div>
+ <ul class="record_actions">
+    <li>
+        <a href="{{ path('question') }}">
+            Back to the list
+        </a>
+    </li>
+</ul>
+<script language="javascript">
+$(document).ready(function() {
+     if ($('#block_destinations div.destination').length === 0) {
+	 		tableIndexQuestion.push(0);
+			add_question();
+	 }
+	 $("#confirmBox_deleteQuestion").dialog({
+
+		autoOpen:false,
+		resizable: false,
+		height:'auto',
+		modal: true,
+		
+		buttons: {
+			"Supprimer": function() {
+				remove_question($(this).data('ele'));
+				$( this ).dialog( "close" );
+			},
+		Cancel: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+
+	});//end dialog
+	$('a.add_question').click(function() {
+		tableIndexQuestion.push( tableIndexQuestion[tableIndexQuestion.length-1]+1);
+		add_question();
+		return false;
+	});
+	
+	 $(document).delegate('a.remove_question','click', function(event) {
+		$("#confirmBox_deleteQuestion").data('ele',$(this)).dialog('open');
+						
+		return false;
+	});
+});
+var tableIndexQuestion = new Array();
+
+function add_question(){
+	var indexQuestion = tableIndexQuestion[tableIndexQuestion.length-1];
+	var row = $('div#prototype').html().replace(/__question__/g, indexQuestion);
+	$('#block_questions').append(row);   
+	
+}
+function remove_question(ele) {
+		if ($('#block_questions div.question').length > 1) 
+			ele.closest('div.question').remove();
+}
+</script>
+
+{% endblock %}
+

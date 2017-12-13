@@ -1,0 +1,88 @@
+{% extends "ChildConnectCCSoftBundle::layout.html.twig" %}
+
+{% block content %}
+ 
+<div class="block_event_show content_left content_element_enfant "> {% include "ChildConnectCCSoftBundle:Enfant:infos_enfant.html.twig" %}
+
+
+  <div class="profil_enfant left">{% if title_H1 is defined %}<h1 class="title_block">{{ title_H1 }}</h1>{% endif %}
+    
+  <div class="table_event_show left">
+    <table class="record_properties">
+      <tbody>
+        <tr>
+          <th>Date :</th>
+          <td>{{ entity.date|date('d-m-Y') }}</td>
+        </tr>
+        <tr>
+          <th>Evénement :</th>
+          <td>{{ entity.evenement|nl2br }}</td>
+        </tr>
+        <tr>
+          <th>Longitude :</th>
+          <td>{{ entity.longitude }}</td>
+        </tr>
+        <tr>
+          <th>Latitude :</th>
+          <td>{{ entity.latitude }}</td>
+        </tr>
+        <tr>
+          <th>Commnentaire :</th>
+          <td>{{ entity.commentaire }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <br />
+    {% if entity.latitude %}<div id="map_canvas"></div>{% endif %}
+  </div>
+</div>
+<div class="clear"></div>
+<div id="confirmBox_delete">
+  <p>Voulez-vous supprimer cet evenement ?</p>
+</div>
+{% if entity.latitude %}
+<script type="text/javascript" src="//maps.googleapis.com/maps/api/js?key=AIzaSyBbprS0KnyAvedCNLFEuNwkDC9-m5BWgoo&sensor=false&language=fr&libraries=places"></script> 
+<script language="javascript">
+var geocoder;
+var map;
+var infowindow = new google.maps.InfoWindow();
+var marker = null;
+var latlng = new google.maps.LatLng({{ entity.latitude}}, {{ entity.longitude}});
+var myOptions = {
+  zoom: 17,
+  center: latlng,
+  mapTypeId: google.maps.MapTypeId.ROADMAP
+}
+map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+
+marker = new google.maps.Marker({
+		position: latlng,
+		map: map
+});
+
+infowindow.setContent('<div id="info_window" style="height:"auto">{{ entity.adresse}}</div>');
+infowindow.open(map, marker);
+</script>
+{% endif %}
+<script language="javascript">
+ $(document).ready(function() {
+	 
+	$( "input.datePicker").datepicker({ 
+        dateFormat: 'dd-mm-yy'
+    });
+
+	
+}); 
+</script>
+{% if is_granted('ROLE_SUPER_ADMIN') %}
+<ul class="record_actions">
+  <li>{{ form(delete_form) }}</li>
+</ul>
+{% endif %}
+{% endblock %}
+{% block menuTop %}
+{{ render(controller('ChildConnectCCSoftBundle:Widget:menuTop', {  'options' : {'actif' : id_body}} ) ) }}
+{% endblock menuTop %}
+{% block menuEnfant %}
+{{ render(controller('ChildConnectCCSoftBundle:Widget:menuEnfant', { 'entities' : {'enfant' : enfant, 'quiz' : quiz }, 'options' : {'actif' : id_body}} ) ) }}
+{% endblock menuEnfant %}

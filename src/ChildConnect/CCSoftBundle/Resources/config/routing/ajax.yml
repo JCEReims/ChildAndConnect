@@ -1,0 +1,4 @@
+checkCodeEnfantAvailable_ajax:
+    pattern:  /enfant/check-code-enfant-available
+    defaults: { _controller: "ChildConnectCCSoftBundle:CodeEnfant:checkCodeEnfantAvailable" }
+    requirements: { _method: post }

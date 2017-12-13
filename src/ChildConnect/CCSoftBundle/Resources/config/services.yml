@@ -1,0 +1,37 @@
+parameters:
+#    child_connect_cc_soft.example.class: ChildConnect\CCSoftBundle\Example
+
+services:
+#    child_connect_cc_soft.example:
+#        class: %child_connect_cc_soft.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]
+services:
+    childconnect_user.registration.form.type:
+        class: ChildConnect\UserBundle\Form\Type\RegistrationFormType
+        arguments: [%fos_user.model.user.class%]
+        tags:
+            - { name: form.type, alias: childconnect_user_registration }
+
+    childconnect_user.group.form.type:
+        class: ChildConnect\UserBundle\Form\Type\GroupFormType
+        arguments: [%fos_user.model.group.class%]
+        tags:
+            - { name: form.type, alias: childconnect_user_group }
+
+    childconnect_user.profile.form.type:
+        class: ChildConnect\UserBundle\Form\Type\ProfileFormType
+        arguments: [%fos_user.model.user.class%]
+        tags:
+            - { name: form.type, alias: childconnect_user_profile }
+    modification_enfant:
+        class: ChildConnect\CCSoftBundle\Service\ModificationEnfantService
+        arguments: [@doctrine.orm.default_entity_manager]
+    logs.insertLog:
+        class: ChildConnect\CCSoftBundle\Service\LogsService
+        arguments: [@doctrine.orm.default_entity_manager]
+
+    my.handler.session_idle:
+        class: ChildConnect\CCSoftBundle\Handler\SessionIdleHandler
+        arguments: ["@session", "@security.context", "@router", %session_max_idle_time%]
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }

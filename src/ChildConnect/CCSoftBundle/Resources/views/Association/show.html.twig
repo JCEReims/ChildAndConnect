@@ -1,0 +1,39 @@
+{% extends "ChildConnectCCSoftBundle::layout.html.twig" %}
+
+{% block content %}
+ {% if title_H1 is defined %}<h1 class="title_block">{{ title_H1 }}</h1><div class="clear"></div>{% endif %}
+
+    <table class="record_properties">
+        <tbody>
+           
+            <tr>
+                <th>Nom : </th>
+                <td>{{ entity.nom }}</td>
+            </tr>
+            <tr>
+                <th>Adresse : </th>
+                <td>{{ entity.adresse }}</td>
+            </tr>
+            <tr>
+                <th>Ville :</th>
+                <td>{{ entity.ville }}</td>
+            </tr>
+            <tr>
+                <th>Téléphone : </th>
+                <td>{{ entity.ville }}</td>
+            </tr>
+            <tr>
+                <th>Email : </th>
+                <td>{{ entity.email }}</td>
+            </tr>
+            <tr>
+                <th>Responsable : </th>
+                <td>{{ entity.responsable }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+{% endblock %}
+{% block menuTop %}
+{{ render(controller('ChildConnectCCSoftBundle:Widget:menuTop', { } ) ) }}
+{% endblock menuTop %}

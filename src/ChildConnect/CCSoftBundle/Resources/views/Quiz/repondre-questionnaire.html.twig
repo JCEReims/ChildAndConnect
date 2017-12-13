@@ -1,0 +1,160 @@
+{% extends "ChildConnectCCSoftBundle::layout.html.twig" %}
+
+{% form_theme form _self %}
+
+{% block choice_widget_expanded %}
+{% spaceless %}
+<div {{ block('widget_container_attributes') }}>
+  <ul class="answers">
+    {% for child in form %}
+ 
+    <li {% if child.vars.checked %} class="checked" {% endif %} >{{ form_widget(child) }}
+      {{ form_label(child) }}</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endspaceless %}
+{% endblock choice_widget_expanded %}
+
+
+{% block content %}
+<div class="block_enfant_profil content_left content_element_enfant ">{% include "ChildConnectCCSoftBundle:Enfant:infos_enfant.html.twig" %}
+  <div class="questions_responses_enfant  left">
+  <div class="response_enfant ">
+    {{ form_start(form) }}
+    {{ form_widget(form.quiz_id) }}
+    {{ form_widget(form.enfant_id) }}
+    
+    {% set  prev_themeQuestion = "" %}
+    {% set  cpt = 1 %}
+    {% set  j = 1 %}
+    
+    {% for question in form.question %}
+    {% set  themeQuestion = question.vars.data.question.themeQuestion.slug %}
+    {% if (themeQuestion != prev_themeQuestion and prev_themeQuestion != "") %}{% set cpt = cpt + 1 %} </div>
+  {% endif %}
+  {% if (themeQuestion != prev_themeQuestion) %}
+  <div id="tab_{{ themeQuestion }}" {% if(cpt >0) %} style="display:none" {% endif %} class="block_question_theme" data-slide="{{ cpt }}" data-nicename="{{ question.vars.value.question.themeQuestion.name}}">
+   <h1 class="title_block">{{ question.vars.value.question.themeQuestion.name }}</h1> {% endif %}
+    <div id="{{ question.vars.id}}"  class="{% if (j%2) %}{{ 'block_question_pair' }} {%else%}{{ 'block_question_impair' }}{%endif%} block_question"> {% for response in question.children %}
+      
+      {% if(response.vars.name == "commentaire") %} {# <!-- <a  href="#" class="add_comment" title="Ajouter un commentaire"><i class="genericon genericon-chat"></i><span>Ajouter commentaire</span></a>--> #}
+      <div class="commentaire_response commentaire_block">
+        
+        <div class="inner_commentaire"><span class="add_comment"><i class="genericon genericon-chat"></i>Commentaire</span>{{ form_widget(response) }}</div> </div>
+      {% else %}
+      <div class="first">
+        <h3>{{ form_label(response) }}</h3>
+        {{ form_widget(response , {'attr' : {'class' : 'foo'} }) }} </div>
+      {% endif %}
+      
+      {% endfor %} </div>
+    <br class="clear" />
+    {% set  prev_themeQuestion = themeQuestion %}
+    {% if (j == form.question|length ) %}</div>
+  {% endif %}
+  {% set  j = j+1 %}
+  {% endfor %} 
+  <div class="clear"></div>
+  <ul class="record_actions ">
+  <li class="left"> <a href="#" class="prev-slide"><i class="genericon genericon-rewind"></i></a> <a href="#" class="next-slide"><i class="genericon genericon-fastforward"></i></a> </li>
+  <li> {{ form_widget(form.submit)}} </li>
+  </ul>
+  {{ form_rest(form) }}
+  {{ form_end(form) }} </div>
+</div>
+<div class="clear"></div>
+<script language="javascript">
+$(document).ready(function() {
+	function RefresMenuEnfant(_hash) {
+		$('.menuEnfant-links').find('a').removeClass('actif');
+		$('.menuEnfant-links').find('li').removeClass('actif');
+		$('.menuEnfant-links').find('li').children('.under').removeClass('blue');
+		$('.menuEnfant-links').find('a').each(function() {
+            if( $(this).attr('data-hash') == _hash ) {
+				$(this).addClass('actif');
+				$(this).parent('li').addClass('actif');
+				$(this).parent('li').prev().children('.under').addClass('blue');
+			}
+        });
+		url = $('a.edit_quiz_enfant').attr('data-url-base');
+		$('a.edit_quiz_enfant').attr('href',url+'#'+_hash);
+	}
+    var hash = window.location.hash.replace("#", "");
+	if(hash) {
+		$('#tab_'+hash).show();
+		var nicename = $('.block_question_theme:visible:first').attr('data-nicename');
+		$('.menuEnfant-links').find('a').each(function() {
+            if( $(this).attr('data-hash') == hash ) {
+				$(this).addClass('actif');
+				$(this).parent('li').addClass('actif');
+				$(this).parent('li').prev().children('.under').addClass('blue');
+			}
+        });
+	}
+	else {
+		hash="liens-sociaux";
+		window.location.hash = '#'+hash;
+		$('#tab_'+hash).show();
+	}
+	
+	$('a.prev-slide').click(function() {
+		prev = $('.block_question_theme:visible').prev('.block_question_theme');
+		if(prev.length) {
+			window.scroll(0, 0);
+			$('.block_question_theme:visible').hide();
+			prev.show();
+			hash = prev.attr('id').replace("tab_", "")
+			window.location.hash = '#'+hash;
+			 RefresMenuEnfant(hash);
+			
+			if(prev.next('.block_question_theme').length !=0 )
+				$('a.next-slide').show();
+				
+		}
+		return false;
+	});
+	$('a.next-slide').click(function() {
+		next = $('.block_question_theme:visible').next('.block_question_theme');
+		if(next.length) {
+			window.scroll(0, 0);
+			$('.block_question_theme:visible').hide();
+			next.show();
+			hash = next.attr('id').replace("tab_", "")
+			window.location.hash = '#'+hash;
+			RefresMenuEnfant(hash);
+			if(next.next('.block_question_theme').length ==0 ) {
+				$(this).hide();
+			}
+		} else {
+			$(this).hide();
+		}
+		return false;
+	});
+	
+	$('a.btn_menu-enfant').click(function(e) {
+		
+		var _hash = $(this).attr('data-hash'); 
+		
+		if(_hash ) {
+			e.preventDefault();
+			window.scroll(0, 0);
+			$('.block_question_theme:visible').hide();	
+			$('#tab_'+_hash).show()
+			$('.menuEnfant-links').find('a').removeClass('actif');
+			$('.menuEnfant-links').find('li').removeClass('actif');
+			$('.menuEnfant-links').find('li').children('.under').removeClass('blue');
+			$(this).addClass('actif');
+			$(this).parent('li').addClass('actif');
+			$(this).parent('li').prev().children('.under').addClass('blue');
+		} 
+	});
+});
+</script> 
+{% endblock %} 
+{% block menuTop %}
+{{ render(controller('ChildConnectCCSoftBundle:Widget:menuTop', {} ) ) }}
+{% endblock menuTop %} 
+{% block menuEnfant %}
+{{ render(controller('ChildConnectCCSoftBundle:Widget:menuEnfant', { 'entities' : {'enfant' : enfant, 'quiz' : quiz }, 'options' : {'actif' : id_body}} ) ) }}
+{% endblock menuEnfant %}

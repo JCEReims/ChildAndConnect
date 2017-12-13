@@ -1,0 +1,32 @@
+{% extends "ChildConnectCCSoftBundle::layout.html.twig" %}
+
+{% block content %}
+<div class="inner_content">
+{% if sortBy == 'DESC'%} {% set sortBy_t = 'ASC' %} {% else %} {% set sortBy_t = 'DESC' %} {% endif %} 
+  <div class="sorting"> <a href="{{ path('enfant_list',{'orderBy':'nom','sortBy' : sortBy_t,'page' : page, 'nbrParPage' : nbrParPage }) }}" title="Afficher par liste" class="btn_show_by_list"><i class="dashicons dashicons-list-view"></i></a> <a href="{{ path('enfant',{'orderBy':'nom','sortBy' : sortBy_t,'page' : page, 'nbrParPage' : nbrParPage }) }}" title="Afficher par miniature" class="btn_show_by_thumb"><i class="dashicons dashicons-exerpt-view"></i></a> </div>
+  <div class="clear"></div>
+  <div id="thumb_list_enfants" class="left">
+    <ul class="thumb_list_enfants">
+      {% for enfant in enfants %}
+      {% set last_photo = enfant.photo.first %}
+      <li><a href="{{ path('enfant_show', { 'id': enfant.id }) }}" class="img-thumb">{% if last_photo %}<img src="{{ asset('uploads/photos') ~ '/' ~ enfant.id ~ '/' ~ last_photo.path }}" />{% else %} {% if enfant.sexe == 'M' %}<img src="{{ asset(img_url~'grey-man-profil.png') }}" />{% else %} <img src="{{ asset(img_url~'grey-woman-profil.png') }}" /> {% endif %}{% endif %}{% if(not enfant.actif) %}<div class="block_non_actif">Désactivé</div>{% endif %}</a> <a  href="{{ path('enfant_show', { 'id': enfant.id }) }}">{{ enfant.prenom }} {{ enfant.nom }} </a> </li>
+      {% endfor %}
+    </ul>
+  </div>
+  <div id="stats_sidebar_home"> </div>
+  <div class="clear"></div>
+  {% if nombrePage is defined %}
+  <div class="pagination">
+    <ul>
+      {% if sortBy == 'DESC'%} {% set sortBy = 'ASC' %} {% else %} {% set sortBy = 'DESC' %} {% endif %} 
+      {# On utilise la fonction range(a, b) qui crée un tableau de valeurs entre a et b #}
+      {% for p in range(1, nombrePage) %} <li{% if p == page %} class="active"{% endif %}> <a href="{{ path('enfant',{'orderBy':orderBy, 'sortBy' : sortBy, 'page': p, 'nbrParPage' : nbrParPage}) }}">{{ p }}</a>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %} </div>
+{% endblock %}
+{% block menuTop %}
+{{ render(controller('ChildConnectCCSoftBundle:Widget:menuTop', { 'options' : {'actif' : id_body}  } ) ) }}
+{% endblock menuTop %} 

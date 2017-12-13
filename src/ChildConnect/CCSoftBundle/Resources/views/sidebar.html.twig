@@ -1,0 +1,7 @@
+{% block sidebar %} 
+<ul class="siderbar-links">
+{% for btn in btns %}
+<li><a href="{{btn.href}}" title="{{ btn.title }}" class="{% for class in btn.class %} {{ class }} {% endfor %} btn_sidebar"><span>{{btn.title}}</span></a></li>
+{%endfor%}
+</ul>
+{% endblock %} 

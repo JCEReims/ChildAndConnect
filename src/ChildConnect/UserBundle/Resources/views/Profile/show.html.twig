@@ -1,0 +1,8 @@
+{% extends "ChildConnectCCSoftBundle::layout.html.twig" %}
+
+{% block content %}
+{% include "ChildConnectUserBundle:Profile:show_content.html.twig" %}
+{% endblock content %}
+{% block menuTop %}
+{{ render(controller('ChildConnectCCSoftBundle:Widget:menuTop', {  } ) ) }}
+{% endblock menuTop %}

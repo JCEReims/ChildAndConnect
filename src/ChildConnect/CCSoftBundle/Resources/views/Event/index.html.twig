@@ -1,0 +1,55 @@
+{% extends "ChildConnectCCSoftBundle::layout.html.twig" %}
+
+{% block content %}
+<div class="inner_content">
+<div class="block_enfant_profil content_element_enfant"> {% include "ChildConnectCCSoftBundle:Enfant:infos_enfant.html.twig" %}
+  <div class="block_list_event content_left left"> {% if title_H1 is defined %}
+    <h1 class="title_block">{{ title_H1 }}</h1>
+    <div class="clear"></div>
+    {% endif %}
+    <div class="table_events left">
+      <table class="records_list">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Evénement</th>
+            <th>Commentaire</th>
+            {% if is_granted('ROLE_ADMIN_ASSOC') %}
+            <th>Actions</th>
+            {% endif %} </tr>
+        </thead>
+        <tbody>
+        
+        {% for entity in entities %}
+        <tr>
+          <td><a href="{{ path('event_show', { 'id': entity.id,'quiz' : quiz.id }) }}">{% if entity.date %}{{ entity.date|date('d-m-Y') }}{% endif %}</a></td>
+          <td>{{ entity.evenement|nl2br }}</td>
+          <td>{{ entity.commentaire }}</td>
+          {% if is_granted('ROLE_ADMIN_ASSOC') %}
+          <td><ul>
+              <li> <a href="{{ path('event_edit', { 'id': entity.id,'quiz' : quiz.id}) }}" class="btn_edit btn_edit_event"><i class="genericon genericon-edit"></i></a> </li>
+            </ul></td>
+          {% endif %} </tr>
+        {% endfor %}
+          </tbody>
+        
+      </table>
+    </div>
+    <div class="clear"></div>
+  </div>
+  {% if is_granted('ROLE_ADMIN_ASSOC') %}
+  <ul class="record_actions right ">
+    <li> <a href="{{ path('event_new', {'enfant' : enfant.id, 'quiz' : quiz.id}) }}" class="btn_edit"> Créer un événement </a> </li>
+  </ul>
+  {% endif %}
+  <div class="clear"></div>
+</div>
+</div>
+
+{% endblock %}
+{% block menuTop %}
+{{ render(controller('ChildConnectCCSoftBundle:Widget:menuTop', {  'options' : {'actif' : id_body}} ) ) }}
+{% endblock menuTop %} 
+{% block menuEnfant %}
+{{ render(controller('ChildConnectCCSoftBundle:Widget:menuEnfant', { 'entities' : {'enfant' : enfant, 'quiz' : quiz }, 'options' : {'actif' : id_body}} ) ) }}
+{% endblock menuEnfant %}

@@ -1,0 +1,10 @@
+{% trans_default_domain 'FOSUserBundle' %}
+
+<div class="fos_user_user_show">
+    <div><label>{{ 'profile.show.username'|trans }} :</label> {{ user.username }}</div>
+    <div><label>{{ 'profile.show.email'|trans }} :</label> {{ user.email }}</div>
+    <div><label>Nom :</label> {{ user.nom }}</div>
+    <div><label>Prénom :</label> {{ user.prenom }}</div>
+    <div><label>Assocation :</label> {% if user.association %}{{ user.association.nom }}{% endif%}</div>
+    <div><label>Groupe :</label>  {% for group in  user.groups %}{{ group.name }} , {% endfor %}</div>
+</div>

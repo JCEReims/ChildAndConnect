@@ -1,0 +1,6 @@
+{% if is_granted("ROLE_ADMIN") %}
+<li><a href="{{ path('enfant') }}"  {% if id_body == 'enfant' %} class="active" {% endif %}><span>Les enfants</span></a></li>
+<li><a href="{{ path('association') }}"  {% if id_body == 'association' %} class="active" {% endif %}><span>Les associations</span></a></li>
+<li><a href="{{ path('user') }}" {% if id_body == 'user' %} class="active" {% endif %}><span>Utilisateurs</span></a></li>
+<li><a href="{{ path('statistique') }}" {% if id_body == 'stats' %} class="active" {% endif %}><span>Statistique</span></a></li>
+{% endif %}

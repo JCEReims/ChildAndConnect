@@ -1,0 +1,13 @@
+{% extends "ChildConnectCCSoftBundle::layout.html.twig" %}
+
+{% block content %}
+ {% if title_H1 is defined %}<h1 class="title_block">{{ title_H1 }}</h1><div class="clear"></div>{% endif %}
+    {{ form(edit_form) }}
+
+<ul class="record_actions">
+    <li>{{ form(delete_form) }}</li>
+</ul>
+{% endblock %}
+{% block menuTop %}
+{{ render(controller('ChildConnectCCSoftBundle:Widget:menuTop', {} ) ) }}
+{% endblock menuTop %}

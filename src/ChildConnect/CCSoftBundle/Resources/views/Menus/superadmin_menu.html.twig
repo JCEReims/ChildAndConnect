@@ -1,0 +1,5 @@
+
+{% if is_granted("ROLE_SUPER_ADMIN") %}
+    <li><a href="{{ path('fos_user_group_list') }}"  {% if id_body == 'group' %} class="active" {% endif %}><span>Groupe</span></a></li>
+
+{% endif %}

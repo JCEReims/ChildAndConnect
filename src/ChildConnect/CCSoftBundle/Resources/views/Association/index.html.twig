@@ -1,0 +1,50 @@
+{% extends "ChildConnectCCSoftBundle::layout.html.twig" %}
+
+{% block content %}
+<div class="inner_content">
+ {% if title_H1 is defined %}<h1 class="title_block">{{ title_H1 }}</h1><div class="clear"></div>{% endif %}
+    <table class="records_list">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Adresse</th>
+                <th>Ville</th>
+                <th>Téléphone</th>
+                <th>Email</th>
+                <th>Responsable</th>
+               {% if is_granted('ROLE_ADMIN') %} <th>Actions</th>{% endif %}
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                <td><a href="{{ path('association_show', { 'id': entity.id }) }}">{{ entity.nom }}</a></td>
+                <td>{{ entity.adresse }}</td>
+                <td>{{ entity.ville }}</td>
+                 <td>{{ entity.telephone }}</td>
+                 <td>{{ entity.email }}</td>
+                 <td>{{ entity.responsable }}</td>
+                 {% if is_granted('ROLE_ADMIN') %}
+                <td>
+                <ul>
+                    <li>
+                        <a href="{{ path('association_edit', { 'id': entity.id }) }}" class="btn_edit"><i class="genericon genericon-edit"></i></a>
+                    </li>
+                </ul>
+                </td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% if is_granted('ROLE_ADMIN') %}
+<ul class="record_actions right ">
+  <li> <a href="{{ path('association_new') }}" class="btn_edit"> Créer une asscociation </a> </li>
+</ul>
+<div class="clear"></div>
+{% endif %}
+</div>
+    {% endblock %}
+{% block menuTop %}
+{{ render(controller('ChildConnectCCSoftBundle:Widget:menuTop', {'options' : {'actif' : id_body} } ) ) }}
+{% endblock menuTop %}

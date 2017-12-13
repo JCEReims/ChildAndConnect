@@ -1,0 +1,9 @@
+association_page:
+    pattern:  /les-associations
+    defaults: { _controller: "ChildConnectCCSoftBundle:Association:pageAssosciations" }
+mentionslegales_page:
+    pattern:  /mentions-legales
+    defaults: { _controller: "ChildConnectCCSoftBundle:Default:getPage",  'page' : 'mentionslegales' }
+contact_page:
+    pattern:  /contact
+    defaults: { _controller: "ChildConnectCCSoftBundle:Default:getPage",  'page' : 'contact' }

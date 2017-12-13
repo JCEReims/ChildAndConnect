@@ -1,0 +1,43 @@
+{% extends "ChildConnectCCSoftBundle::layout.html.twig" %}
+
+{% block content %}
+
+    <table class="records_list">
+        <thead>
+            <tr>
+              
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Age</th>
+                <th>Surnom</th>
+             
+                <th> Code </th>
+                <th> Association</th>
+                <th>Modifier</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for enfant in enfants %}
+            <tr>
+               
+                <td>{% if  enfant.nom %}<a href="{{ path('enfant_show', { 'id': enfant.id }) }}">{{ enfant.nom }}</a>{% else %} Inconnu {% endif %}</td>
+                <td>{% if  enfant.prenom %}<a href="{{ path('enfant_show', { 'id': enfant.id }) }}">{{ enfant.prenom }}{% else %}Inconnu {% endif %}</a></td>
+                <td>{{ "now"|date("Y") - enfant.dateNaissance|date('Y') }} ans</td>
+                <td>{{ enfant.surnom }}</td>
+                
+                 <td>{{ enfant.codeEnfant.code }}</td>
+                 <td><ul>{% for assoc in  enfant.associations %}<li>{{ assoc.nom }}</li>{% endfor %}</ul></td>
+                <td>
+                        <a href="{{ path('enfant_edit', { 'id': enfant.id }) }}" class="btn_edit btn_edit_enfant"><i class="genericon genericon-edit"></i></a>
+             
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% endblock %}
+{% block menuTop %}
+{{ render(controller('ChildConnectCCSoftBundle:Widget:menuTop', {} ) ) }}
+{% endblock menuTop %}
+
+

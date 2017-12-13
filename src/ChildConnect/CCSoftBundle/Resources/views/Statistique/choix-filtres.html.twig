@@ -1,0 +1,11 @@
+
+	{{ form(form) }}
+
+<script language="javascript">
+$(document).ready(function() {
+    $('.btn_actif_inactif input[type=radio]').change(function() {
+		$form = $(this).closest('form');
+		$form.submit();
+	});
+});
+</script>

@@ -1,0 +1,52 @@
+quiz:
+    pattern:  /
+    defaults: { _controller: "ChildConnectCCSoftBundle:Quiz:index" }
+
+quiz_show:
+    pattern:  /{id}/show
+    defaults: { _controller: "ChildConnectCCSoftBundle:Quiz:show" }
+
+quiz_new:
+    pattern:  /new
+    defaults: { _controller: "ChildConnectCCSoftBundle:Quiz:new" }
+
+quiz_create:
+    pattern:  /create
+    defaults: { _controller: "ChildConnectCCSoftBundle:Quiz:create" }
+    requirements: { _method: post }
+
+quiz_edit:
+    pattern:  /{id}/edit
+    defaults: { _controller: "ChildConnectCCSoftBundle:Quiz:edit" }
+
+quiz_remplir:
+    pattern:  /{id}/remplir-quiz
+    defaults: { _controller: "ChildConnectCCSoftBundle:Quiz:remplir" }
+
+quiz_create_remplir:
+    pattern:  /{id}/remplir-quiz-create
+    defaults: { _controller: "ChildConnectCCSoftBundle:Quiz:remplirCreate" }
+    requirements: { _method: post }
+
+quiz_update:
+    pattern:  /{id}/update
+    defaults: { _controller: "ChildConnectCCSoftBundle:Quiz:update" }
+    requirements: { _method: post|put }
+
+quiz_delete:
+    pattern:  /{id}/delete
+    defaults: { _controller: "ChildConnectCCSoftBundle:Quiz:delete" }
+    requirements: { _method: post|delete }
+
+quiz_complete:
+    pattern:  /{quiz}/{enfant}/repondre-questionnaire
+    defaults: { _controller: "ChildConnectCCSoftBundle:Quiz:quizComplete" }
+
+quiz_complete_post:
+    pattern:  /{id}/repondre-questionnaire-post
+    defaults: { _controller: "ChildConnectCCSoftBundle:Quiz:quizCompletePost" }
+    requirements: { _method: post|put }
+
+quiz_show_enfant:
+    pattern:  /{quiz}/{enfant}/questionnaire-reponse-enfant
+    defaults: { _controller: "ChildConnectCCSoftBundle:Quiz:quizShowResponse"}

@@ -1,0 +1,4 @@
+child_connect_cc_soft:
+    resource: "@ChildConnectCCSoftBundle/Resources/config/routing.yml"
+    prefix:   /
+

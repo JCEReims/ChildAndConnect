@@ -1,0 +1,19 @@
+{% extends "ChildConnectCCSoftBundle::layout.html.twig" %}
+{% block header %}
+
+<!--[if lt IE 9]><script language="javascript" type="text/javascript" src="{{ asset(js_url~'jqplot/excanvas.min.js')}}"></script><![endif]-->
+<script type="text/javascript" src="{{ asset(js_url~'jqplot/jquery.jqplot.min.js')}}"></script>
+<script type="text/javascript" src="{{ asset(js_url~'jqplot/plugins/jqplot.barRenderer.min.js')}}"></script>
+
+<script type="text/javascript" src="{{ asset(js_url~'jqplot/plugins/jqplot.categoryAxisRenderer.min.js')}}"></script>
+<script type="text/javascript" src="{{ asset(js_url~'jqplot/plugins/jqplot.pointLabels.min.js')}}"></script>
+<script type="text/javascript" src="{{ asset(js_url~'jqplot/plugins/jqplot.pieRenderer.min.js')}}"></script>
+<script type="text/javascript" src="{{ asset(js_url~'jqplot/plugins/jqplot.highlighter.min.js')}}"></script>
+{% endblock %}
+{% block content %}
+    <h1>Statistiques</h1>
+	{% if laQuestion is defined %}<h2>{{ laQuestion.name }}</h2>{% endif %}
+{% endblock %}
+{% block sidebar %}
+{{ render(controller('ChildConnectCCSoftBundle:Statistique:choixStats' ) ) }}
+{% endblock sidebar %}
