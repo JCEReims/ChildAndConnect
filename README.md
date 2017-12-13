@@ -30,7 +30,7 @@ You must install :
 - Create the admin user
 
 > php app/console fos:user:create adminuser --super-admin
-php app/console fos:user:activate adminuser
+> php app/console fos:user:activate adminuser
 
 - Run the application
 
