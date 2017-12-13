@@ -10,9 +10,9 @@ The solution is based on php framework [symfony](https://symfony.com/).
 
 You must install :
 
-- The last version of php composer.
-- Php 5.3.3 or higher.
-- Mysql 5.1 or higher.
+- The last version of php composer
+- Php 5.3.3 or higher
+- Mysql 5.1 or higher
 
 ## How to install
 
@@ -24,9 +24,9 @@ You must install :
 
 > composer install
 
-- In mysql, create the database ccapplicqesoft and create an associate database user.
-- Use the script sql/database.sql to create the database structure.
-- Open files app/config/config_dev.yml and app/config/config_dev.yml and set right database parameters.
+- In mysql, create the database ccapplicqesoft and create an associate database user
+- Use the script sql/database.sql to create the database structure
+- Open files app/config/config_dev.yml and app/config/config_dev.yml and set right database parameters
 - Create the admin user
 
 > php app/console fos:user:create adminuser --super-admin
