@@ -1,6 +1,6 @@
 # Child And Connect
 
-Child and Connect is a trademark created by JCE Reims (http://www.jcereims.fr).
+Child and Connect © is a trademark created by JCE Reims © (http://www.jcereims.fr).
 
 The technical creator is imajim (https://github.com/imajim).
 
