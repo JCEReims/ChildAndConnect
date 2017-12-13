@@ -1,12 +1,18 @@
-# ChildAndConnect
+# Child And Connect
 
-Child and Connect is a trademark of JCE Reims (http://www.jcereims.fr).
+Child and Connect is a trademark created by JCE Reims (http://www.jcereims.fr).
 
-The technical creator is Jimmy Patat (contact@imagim.com).
+The technical creator is imajim.
 
-## Requiements
+The solution is based on symfony php framework (https://symfony.com/).
 
-You should install the last version of php composer and mysql 5.1 or higher.
+## Requirements
+
+You should install :
+
+The last version of php composer.
+Php 5.3.3 or higher.
+Mysql 5.1 or higher.
 
 ## How to install
 
@@ -18,9 +24,9 @@ Run php composer
 
 composer install
 
-In mysql, create the database ccapplicqesoft and create an associate user_id
+In mysql, create the database ccapplicqesoft and create an associate database user.
 
-Use the script sql/database.sql to create the structure.
+Use the script sql/database.sql to create the database structure.
 
 Open files app/config/config_dev.yml and app/config/config_dev.yml and set right database parameters.
 
@@ -29,5 +35,8 @@ Create the admin user
 php app/console fos:user:create adminuser --super-admin
 php app/console fos:user:activate adminuser
 
+Run the application
+
 php app/console server:run
-admin_jce
+
+Enjoy :D !
